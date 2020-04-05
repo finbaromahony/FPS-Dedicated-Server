@@ -1,10 +1,16 @@
-variable "image_id" {
-    type = string
-    description = "The id of the machine image (AMI) to use for the server"
+variable "region" {
+  type    = string
+  default = "eu-west-1"
 }
 
-variable "region" {
-    type = string
-    default = "eu-west-1"
+variable "instance_type" {
+  type    = string
+  default = "t2.micro"
 }
+
+variable "key_name" {
+  type    = string
+  default = "cstrike_key"
+}
+
 
