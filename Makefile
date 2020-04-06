@@ -33,5 +33,16 @@ select_workspace: init
 .PHONY: apply
 apply: select_workspace
 	@$(ECHO) "apply to $(WORKSPACE)"
-	@cd ./src/deploy; $(TERRAFORM) workspace select $(WORKSPACE)
-	@$(ECHO) "$(WORKSPACE) workspace selected"
+	@cd ./src/deploy; $(TERRAFORM) apply
+	@$(ECHO) "deployment in workspace $(WORKSPACE) applied"
+
+.PHONY: destroy
+destroy: select_workspace
+	@$(ECHO) "destroy deployment at workspace $(WORKSPACE)"
+	@cd ./src/deploy; $(TERRAFORM) destroyed
+	@$(ECHO) "deployment in workspace $(WORKSPACE) destroyed"
+
+.PHONY: output
+output: select_workspace
+	@$(ECHO) "export output from $(WORKSPACE)"
+	@cd ./src/deploy; $(TERRAFORM) output --json ./terraform_output.json
