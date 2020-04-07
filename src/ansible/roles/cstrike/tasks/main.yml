@@ -1,0 +1,41 @@
+# 1 download steamCMD
+- name: Download steamCMD
+  get_url:
+    url: https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz
+    mode: 0550
+
+# 2 install packages via yum
+- name: install required packages
+  yum:
+    name: glibc.i686 libstdc++.i686
+    state: present
+
+# 3 update iptables
+- iptables:
+    action: append
+    chain: INPUT
+    destination_port: 1025:65355
+    source_port: 27000:27030
+    protocol: udp
+    match: udp
+    jump: ACCEPT
+
+-iptables:
+  action: append
+  chain: INPUT
+  destination_port: 1025:65355
+  source_port: 4300
+  protocol: udp
+  match: udp
+  jump: ACCEPT
+
+# 4 untar
+- name: Untar steamcmd archive
+  shell: tar zxvf steamcmd_linux.tar.gz
+
+# 5 run a script
+- name: launch steamCMD
+  shell: ./steamcmd.sh +login anonymous +force_install_dir ./27020/ +app_set_config 90 mod cstrike +app_update 90 validate +app_update 90 -beta beta validate +quit
+
+# 6 update lc.local or similar in order to have it automatically start server
+# later

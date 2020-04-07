@@ -1,0 +1,11 @@
+---
+#
+# counter-strike-server playbook
+#
+
+- hosts: cstrike
+  remote_user: ec2-user
+  become: yes
+  become_user: root
+  roles:
+  - { role: cstrike }

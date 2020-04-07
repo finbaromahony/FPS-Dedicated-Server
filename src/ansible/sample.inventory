@@ -1,0 +1,8 @@
+[all:vars]
+ansible_private_key_file=<path to ssh key>
+
+[cstrike]
+instance_ip ansible_host=<instance public ip>
+
+[cstrike:vars]
+ansible_user=ec2-user
