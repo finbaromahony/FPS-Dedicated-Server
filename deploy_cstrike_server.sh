@@ -3,15 +3,13 @@
 #######################################
 # Get SERVER_IP out of terraform output.
 # Globals:
-#   SSH_KEY_FILE
 #   SERVER_IP
-#   ANSIBLE_PATH
 # Arguments:
 #   None
 #######################################
 function get_server_ip_from_terraform_output() {
     make output
-    IP=$(jq '.server_ip.value' ./terraform_output.json | sed 's/\"//g')
+    SERVER_IP=$(jq '.server_ip.value' ./terraform_output.json | sed 's/\"//g')
 }
 
 #######################################

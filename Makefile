@@ -39,10 +39,10 @@ apply: select_workspace
 .PHONY: destroy
 destroy: select_workspace
 	@$(ECHO) "destroy deployment at workspace $(WORKSPACE)"
-	@cd ./src/deploy; $(TERRAFORM) destroyed
+	@cd ./src/deploy; $(TERRAFORM) destroy
 	@$(ECHO) "deployment in workspace $(WORKSPACE) destroyed"
 
 .PHONY: output
 output: select_workspace
 	@$(ECHO) "export output from $(WORKSPACE)"
-	@cd ./src/deploy; $(TERRAFORM) output --json ./terraform_output.json
+	@cd ./src/deploy; $(TERRAFORM) output --json > ../../terraform_output.json
