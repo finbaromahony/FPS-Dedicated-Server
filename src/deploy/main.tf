@@ -1,5 +1,5 @@
 provider "aws" {
-  region                  = "${var.region}"
+  region                  = var.region
   shared_credentials_file = "~/.aws/credentials"
   profile                 = "default"
 }
@@ -25,9 +25,9 @@ data "aws_ami" "aws_linux_two" {
 }
 
 resource "aws_instance" "cstrike" {
-  ami                         = "${data.aws_ami.aws_linux_two.id}"
-  instance_type               = "${var.instance_type}"
-  key_name                    = "${var.key_name}"
+  ami                         = data.aws_ami.aws_linux_two.id
+  instance_type               = var.instance_type
+  key_name                    = var.key_name
   associate_public_ip_address = true
   monitoring                  = false
 
