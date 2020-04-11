@@ -3,15 +3,20 @@
   get_url:
     url: https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz
     mode: 0550
+    dest: /home/ec2-user/steamcmd_linux.tar.gz
 
 # 2 install packages via yum
 - name: install required packages
   yum:
-    name: glibc.i686 libstdc++.i686
-    state: present
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - glibc.i686
+    - libstdc++.i686
 
 # 3 update iptables
-- iptables:
+- name: Allow ingress first set
+  iptables:
     action: append
     chain: INPUT
     destination_port: 1025:65355
@@ -20,18 +25,22 @@
     match: udp
     jump: ACCEPT
 
--iptables:
-  action: append
-  chain: INPUT
-  destination_port: 1025:65355
-  source_port: 4300
-  protocol: udp
-  match: udp
-  jump: ACCEPT
+- NAME: Allow ingress second set
+  iptables:
+    action: append
+    chain: INPUT
+    destination_port: 1025:65355
+    source_port: 4300
+    protocol: udp
+    match: udp
+    jump: ACCEPT
 
 # 4 untar
 - name: Untar steamcmd archive
-  shell: tar zxvf steamcmd_linux.tar.gz
+  unarchive:
+    src: https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz
+    dest: /home/ec2-user
+    remote_src: yes
 
 # 5 run a script
 - name: launch steamCMD

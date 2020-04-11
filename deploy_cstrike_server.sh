@@ -96,11 +96,25 @@ function can_i_login() {
     done
 }
 
-PWD = $(pwd)
-ANSIBLE_PATH="${PWD}/ansible"
+#######################################
+# Print instructions to connect to counter strike server
+# Globals:
+#   SERVER_IP
+# Arguments:
+#   None
+# Returns:
+#   None
+#######################################
+function print_instructions() {
+    echo "Press ~ to open command console and type"
+    echo "connect ${SERVER_IP}"
+}
+
+PWD="$(pwd)"
+ANSIBLE_PATH="${PWD}/src/ansible"
 # for now we assume the key to use for communicating with server is called cstrike.pem
 # and it resides in ~/.ssh
-SSH_KEY_FILE="~/.ssh/cstrike.pem"
+SSH_KEY_FILE="~/.ssh/cstrike_rsa"
 
 case "$1" in
     deploy)
@@ -112,10 +126,9 @@ case "$1" in
         can_i_login
         generate_inventory
         run_ansible
+        print_instructions
         ;;
     *)
         echo "${1} is not a supported command."
 esac
 
-echo "Press ~ to open command console and type"
-echo "connect ${SERVER_IP}"

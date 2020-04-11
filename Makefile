@@ -14,35 +14,35 @@ WORKSPACE=counter-strike-instance-workspace
 .PHONY: fmt
 fmt:
 	@$(ECHO) "Format terraform files"
-	@cd ./src/deploy/; $(TERRAFORM) $(FMT) -recursive
+	@cd ./src/terraform/; $(TERRAFORM) $(FMT) -recursive
 	@$(ECHO) "Finished formatting files"
 
 .PHONY: init
 init:
 	@$(ECHO) "Perform terraform init"
-	@cd ./src/deploy; $(TERRAFORM) $(INIT)
+	@cd ./src/terraform; $(TERRAFORM) $(INIT)
 	@$(ECHO) "Finished terraform init"
 
 .PHONY: select_workspace
 select_workspace: init
 	@$(ECHO) "select $(WORKSPACE) workspace"
-	@cd ./src/deploy; $(TERRAFORM) workspace new $(WORKSPACE) ||:
-	@cd ./src/deploy; $(TERRAFORM) workspace select $(WORKSPACE)
+	@cd ./src/terraform; $(TERRAFORM) workspace new $(WORKSPACE) ||:
+	@cd ./src/terraform; $(TERRAFORM) workspace select $(WORKSPACE)
 	@$(ECHO) "$(WORKSPACE) workspace selected"
 
 .PHONY: apply
 apply: select_workspace
 	@$(ECHO) "apply to $(WORKSPACE)"
-	@cd ./src/deploy; $(TERRAFORM) apply
+	@cd ./src/terraform; $(TERRAFORM) apply --auto-approve
 	@$(ECHO) "deployment in workspace $(WORKSPACE) applied"
 
 .PHONY: destroy
 destroy: select_workspace
 	@$(ECHO) "destroy deployment at workspace $(WORKSPACE)"
-	@cd ./src/deploy; $(TERRAFORM) destroy
+	@cd ./src/terraform; $(TERRAFORM) destroy --auto-approve
 	@$(ECHO) "deployment in workspace $(WORKSPACE) destroyed"
 
 .PHONY: output
 output: select_workspace
 	@$(ECHO) "export output from $(WORKSPACE)"
-	@cd ./src/deploy; $(TERRAFORM) output --json > ../../terraform_output.json
+	@cd ./src/terraform; $(TERRAFORM) output --json > ../../terraform_output.json
