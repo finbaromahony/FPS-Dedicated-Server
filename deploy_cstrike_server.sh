@@ -89,6 +89,7 @@ function can_i_login() {
         -o StrictHostKeyChecking=no \
         -o ConnectTimeout=5 \
         -i ${SSH_KEY_FILE} \
+        -vvvv \
         ubuntu@"${SERVER_IP}" \
         echo "HOWDY GENTS"
         then
@@ -134,6 +135,9 @@ case "$1" in
         generate_inventory
         run_ansible
         print_instructions
+        ;;
+    destroy)
+        make destroy
         ;;
     *)
         echo "${1} is not a supported command."

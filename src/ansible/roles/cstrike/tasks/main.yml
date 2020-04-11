@@ -1,12 +1,21 @@
 # Run three times to get all the updates and validate the package
-- name: install cstrike
-  shell: steamcmd +login "anonymous" +force_install_dir "./cs16server" +app_update "90 validate" +quit
+- name: update steamcmd
+  shell: steamcmd +quit
 
 - name: install cstrike
   shell: steamcmd +login "anonymous" +force_install_dir "./cs16server" +app_update "90 validate" +quit
+  ignore_errors: yes
 
-- name: install cstrike
+- name: update cstrike
   shell: steamcmd +login "anonymous" +force_install_dir "./cs16server" +app_update "90 validate" +quit
+  ignore_errors: yes
+
+- name: validate cstrike
+  shell: steamcmd +login "anonymous" +force_install_dir "./cs16server" +app_update "90 validate" +quit
+  ignore_errors: yes
+
+# TASK [cstrike : create listip.cfg] *************************************************************************************************************************************************************************
+# fatal: [server_ip]: FAILED! => {"changed": false, "msg": "Error, could not touch target: [Errno 2] No such file or directory: b'/home/ansible/.stream/steamcmd/c16server/listip.cfg'", "path": "/home/ansible/.stream/steamcmd/c16server/listip.cfg", "state": "absent"}
 
 - name: create listip.cfg
   file:

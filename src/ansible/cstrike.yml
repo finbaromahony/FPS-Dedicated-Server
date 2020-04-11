@@ -7,8 +7,9 @@
   remote_user: ubuntu
   become: yes
   become_user: root
+  environment:
+    PATH: "{{ ansible_env.PATH }}:/usr/games"
   roles:
-  - add_user
   - install_packages
   - iptables
   - cstrike
