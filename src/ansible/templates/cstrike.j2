@@ -1,0 +1,14 @@
+[Unit]
+Description=Counter Strike Dedicated Server
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=steam
+ExecStart=/home/ubuntu/.steam/steamcmd/cs16server/hlds_run -game cstrike +ip 0.0.0.0 +maxplayers 12 +map de_dust2 -insecure
+
+[Install]
+WantedBy=multi-user.target

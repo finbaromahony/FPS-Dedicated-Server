@@ -22,13 +22,18 @@ function get_server_ip_from_terraform_output() {
 #   None
 #######################################
 function generate_inventory() {
+    echo "Generate Inventory file"
     echo "[all:vars]
 ansible_connection=ssh
 ansible_private_key_file=${SSH_KEY_FILE}
 [cstrike]
 server_ip ansible_host=${SERVER_IP}
 [cstrike:vars]
-ansible_user=ec2-user" > "${ANSIBLE_PATH}/cstrike_inventory"
+ansible_user=ubuntu
+rcon_password=${RCON_PASSWORD}
+ansible_python_interpreter=/usr/bin/python3" > "${ANSIBLE_PATH}/cstrike_inventory"
+
+
 }
 
 #######################################
@@ -62,6 +67,7 @@ function check_required_variables_are_available () {
     [ -n "${SERVER_IP}" ] || { echo "variable SERVER_IP does not exist; abort!"; exit 1; }
     [ -n "${ANSIBLE_PATH}" ] || { echo "variable ANSIBLE_PATH does not exist; abort!"; exit 1; }
     [ -n "${SSH_KEY_FILE}" ] || { echo "variable SSH_KEY_FILE does not exist; abort!"; exit 1; }
+    [ -n "${RCON_PASSWORD}" ] || { echo "variable RCON_PASSWORD please entery this on command line; abort!"; exit 1; }
 }
 
 #######################################
@@ -83,7 +89,7 @@ function can_i_login() {
         -o StrictHostKeyChecking=no \
         -o ConnectTimeout=5 \
         -i ${SSH_KEY_FILE} \
-        ec2-user@"${SERVER_IP}" \
+        ubuntu@"${SERVER_IP}" \
         echo "HOWDY GENTS"
         then
             echo "server is now avaible"
@@ -116,6 +122,7 @@ ANSIBLE_PATH="${PWD}/src/ansible"
 # and it resides in ~/.ssh
 SSH_KEY_FILE="~/.ssh/cstrike_rsa"
 
+RCON_PASSWORD="${2}"
 case "$1" in
     deploy)
         make apply

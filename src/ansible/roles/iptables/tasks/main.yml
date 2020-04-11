@@ -1,0 +1,19 @@
+- name: Allow ingress first set
+  iptables:
+    action: append
+    chain: INPUT
+    destination_port: 1025:65355
+    source_port: 27000:27030
+    protocol: udp
+    match: udp
+    jump: ACCEPT
+
+- name: Allow ingress second set
+  iptables:
+    action: append
+    chain: INPUT
+    destination_port: 1025:65355
+    source_port: 4300
+    protocol: udp
+    match: udp
+    jump: ACCEPT

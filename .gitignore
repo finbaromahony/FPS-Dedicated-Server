@@ -31,4 +31,4 @@ override.tf.json
 
 # Ansible
 cstrike_inventory
-
+*.retry

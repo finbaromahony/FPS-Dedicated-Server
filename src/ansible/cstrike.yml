@@ -4,8 +4,11 @@
 #
 
 - hosts: cstrike
-  remote_user: ec2-user
+  remote_user: ubuntu
   become: yes
   become_user: root
   roles:
-  - { role: cstrike }
+  - add_user
+  - install_packages
+  - iptables
+  - cstrike

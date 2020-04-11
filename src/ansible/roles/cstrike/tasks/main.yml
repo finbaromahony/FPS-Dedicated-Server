@@ -1,54 +1,54 @@
-# 1 download steamCMD
-- name: Download steamCMD
-  get_url:
-    url: https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz
-    mode: 0550
-    dest: /home/ec2-user/steamcmd_linux.tar.gz
+# Run three times to get all the updates and validate the package
+- name: install cstrike
+  shell: steamcmd +login "anonymous" +force_install_dir "./cs16server" +app_update "90 validate" +quit
 
-# 2 install packages via yum
-- name: install required packages
-  yum:
-    name: "{{ packages }}"
-  vars:
-    packages:
-    - glibc.i686
-    - libstdc++.i686
+- name: install cstrike
+  shell: steamcmd +login "anonymous" +force_install_dir "./cs16server" +app_update "90 validate" +quit
 
-# 3 update iptables
-- name: Allow ingress first set
-  iptables:
-    action: append
-    chain: INPUT
-    destination_port: 1025:65355
-    source_port: 27000:27030
-    protocol: udp
-    match: udp
-    jump: ACCEPT
+- name: install cstrike
+  shell: steamcmd +login "anonymous" +force_install_dir "./cs16server" +app_update "90 validate" +quit
 
-- NAME: Allow ingress second set
-  iptables:
-    action: append
-    chain: INPUT
-    destination_port: 1025:65355
-    source_port: 4300
-    protocol: udp
-    match: udp
-    jump: ACCEPT
+- name: create listip.cfg
+  file:
+    path: /home/ansible/.stream/steamcmd/c16server/listip.cfg
+    state: touch
+    mode: u=rw,g=r,o=r
 
-# 4 untar
-- name: Untar steamcmd archive
-  unarchive:
-    src: https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz
-    dest: /home/ec2-user
-    remote_src: yes
+- name: create banned.cfg
+  file:
+    path: /home/ansible/.stream/steamcmd/c16server/listip.cfg
+    state: touch
+    mode: u=rw,g=r,o=r
 
-# 5 run a script
-- name: launch steamCMD
-  shell: ./steamcmd.sh +login anonymous +force_install_dir ./27020/ +app_set_config 90 mod cstrike +app_update 90 validate +app_update 90 -beta beta validate +quit
+- name: set rcon_password
+  shell: echo rcon_password {{ rcon_password }} > /home/ansible/.stream/steamcmd/c16server/listip.cfg
 
-- name: start server
-  shell: ./hlds_run -console -game cstrike +port 27020 +map de_dust2 +maxplayers 32 -pingboost 1
-  chdir: ./27070
+- name: Ansible create file with content example
+  copy:
+    dest: "/home/ansible/.stream/steamcmd/c16server/server.cfg"
+    content: |
+      rcon_password {{ rcon_password }}
 
-# 6 update lc.local or similar in order to have it automatically start server
-# later
+- name: add systemctl file for cstrike
+  template:
+    src: cstrike.j2
+    dest: /etc/systemd/system/cstrike.service
+    mode: 0644
+    force: yes
+    backup: no
+
+- name: enable cstrike service
+  systemd:
+    name: cstrike
+    enabled: yes
+
+- name: restart cstrike 1st time
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: cstrike
+
+- name: restart cstrike 2nd time
+  systemd:
+    state: restarted
+    name: cstrike

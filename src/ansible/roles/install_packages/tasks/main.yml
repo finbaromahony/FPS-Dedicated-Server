@@ -1,0 +1,21 @@
+- apt_repository:
+    repo: multiverse
+
+- name: add i386 architecture
+  shell: dpkg --add-architecture i386
+  become: yes
+  become-user: root
+
+- name: update
+  apt:
+    name: *
+    state: latest
+
+- name: install steamcmd
+  apt:
+    name: steamcmd
+
+#sudo add-apt-repository multiverse 
+#sudo dpkg --add-architecture i386
+#sudo apt-get update
+#sudo apt-get install lib32gcc1 steamcmd
