@@ -1,6 +1,6 @@
 ---
 #
-# counter-strike-server playbook
+# counter-strike-condition-zero server playbook
 #
 
 - hosts: cstrike
@@ -11,4 +11,4 @@
   roles:
   - install_packages
   - iptables
-  - cstrike1.6
+  - cscz

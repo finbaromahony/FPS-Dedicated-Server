@@ -17,11 +17,23 @@ Following instructions are for deploying from an Ubuntu Instance.
   aws ec2 import-key-pair  --key-name cstrike --public-key-material "ssh-rsa XXXXHXHHXHX youruser@yourdomain.com"
   ```
 
+## Viewing Help
+
+Run `deploy_cstrike_server.sh` specifying the help command
+```shell
+[-h]
+-d Deploy Infrastucture
+-y Destroy Infrastructure
+-c Install Counter Strike 1.6 Server
+-z Install Counter Strike Condition Zero Server
+-r Specify RCON_PASSWORD value
+```
+
 ## Deploying Instance
 
 Run `deploy_cstrike_server.sh` specifying the deploy command
 ```shell
-./deploy_cstrike_server.sh deploy
+./deploy_cstrike_server.sh -d
 ```
 Alternatively you could run the Makefile directly
 ```shell
@@ -32,12 +44,24 @@ make apply
 
 Run `deploy_cstrike_server.sh` specifying the install command
 ```shell
-./deploy_cstrike_server.sh install
+./deploy_cstrike_server.sh  -c -r <rcon_password>
 ```
+## Installing Counter Strike Condition Zero Dedicated Server
 
+Run `deploy_cstrike_server.sh` specifying the install command
+```shell
+./deploy_cstrike_server.sh -z -r <rcon_password>
+```
 ## Connecting to Counter Strike Dedicated Server
 
 Output of `deploy_strike_server.sh` will give the console command to run in counter-strike to run to access the server.
 ```shell
 connect <SERVER_IP>
+```
+
+### Destroying the Counter Strike Dedicated Server
+
+Run `deploy_cstrike_server.sh` specifying the destroy command
+```
+./deploy_cstrike_server.sh -y
 ```

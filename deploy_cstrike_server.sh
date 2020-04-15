@@ -46,9 +46,18 @@ ansible_python_interpreter=/usr/bin/python3" > "${ANSIBLE_PATH}/cstrike_inventor
 #   None
 #######################################
 function run_ansible() {
-    echo "run ansible to install cstrike dedicated server on instance"
-    /usr/bin/ansible-playbook -i "${ANSIBLE_PATH}"/cstrike_inventory \
-                                 "${ANSIBLE_PATH}"/cstrike.yml
+    if [ -n "${COUNTER_STRIKE}" ]
+    then
+        echo "run ansible to install cstrike dedicated server on instance"
+        /usr/bin/ansible-playbook -i "${ANSIBLE_PATH}"/cstrike_inventory \
+                                     "${ANSIBLE_PATH}"/cstrike.yml
+    fi
+    if [ -n "${CONDITION_ZERO}" ]
+    then
+        echo "run ansible to install cstrike condition zero dedicated server on instance"
+        /usr/bin/ansible-playbook -i "${ANSIBLE_PATH}"/cstrike_inventory \
+                                     "${ANSIBLE_PATH}"/cscz.yml
+    fi
 }
 
 
@@ -89,7 +98,6 @@ function can_i_login() {
         -o StrictHostKeyChecking=no \
         -o ConnectTimeout=5 \
         -i ${SSH_KEY_FILE} \
-        -vvvv \
         ubuntu@"${SERVER_IP}" \
         echo "HOWDY GENTS"
         then
@@ -115,7 +123,32 @@ function can_i_login() {
 function print_instructions() {
     echo "Press ~ to open command console and type"
     echo "connect ${SERVER_IP}"
+    echo "To change password on server"
+    echo "    - Press ~ to open command console and type"
+    echo "    - rcon_password ${RCON_PASSWORD}"
+    echo "    - rcon sv_password \"<password>\""
 }
+
+#######################################
+# Print how script is used.
+# Globals:
+#   None
+# Arguments:
+#   None
+# Returns:
+#   None
+#######################################
+function print_help() {
+    # Usage for using the script can be shown by using -h
+    echo "[-h]
+-d Deploy Infrastucture
+-y Destroy Infrastructure
+-c Install Counter Strike 1.6 Server
+-z Install Counter Strike Condition Zero Server
+-r Specify RCON_PASSWORD value"
+exit 0
+}
+
 
 PWD="$(pwd)"
 ANSIBLE_PATH="${PWD}/src/ansible"
@@ -123,23 +156,57 @@ ANSIBLE_PATH="${PWD}/src/ansible"
 # and it resides in ~/.ssh
 SSH_KEY_FILE="~/.ssh/cstrike_rsa"
 
-RCON_PASSWORD="${2}"
-case "$1" in
-    deploy)
-        make apply
-        ;;
-    install)
-        get_server_ip_from_terraform_output
-        check_required_variables_are_available
-        can_i_login
-        generate_inventory
-        run_ansible
-        print_instructions
-        ;;
-    destroy)
-        make destroy
-        ;;
-    *)
-        echo "${1} is not a supported command."
-esac
+while getopts :hdyczr: option
+do
+    case "${option}"
+    in
+        h) print_help;;
+        d) DEPLOY=1;;
+        y) DESTROY=1;;
+        c) COUNTER_STRIKE=1;;
+        z) CONDITION_ZERO=1;;
+        r) RCON_PASSWORD=${OPTARG};;
+        *) print_help;;
+    esac
+done
+
+if [ -n "${DEPLOY}" ]
+then
+   make apply
+   echo "Im deploying because deploy is ${DEPLOY}"
+fi
+if [ -n "${COUNTER_STRIKE}" ] || [ -n "${CONDITION_ZERO}" ]
+then
+    get_server_ip_from_terraform_output
+    check_required_variables_are_available
+    can_i_login
+    generate_inventory
+    run_ansible
+    print_instructions
+fi
+if [ -n "${DESTROY}" ]
+then
+    echo "Im destroying because destroy is ${DESTROY}"
+    make destroy
+fi
+
+
+# case "$1" in
+#     deploy)
+#         make apply
+#         ;;
+#     install)
+#         get_server_ip_from_terraform_output
+#         check_required_variables_are_available
+#         can_i_login
+#         generate_inventory
+#         run_ansible
+#         print_instructions
+#         ;;
+#     destroy)
+#         make destroy
+#         ;;
+#     *)
+#         echo "${1} is not a supported command."
+# esac
 
