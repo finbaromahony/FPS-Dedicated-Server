@@ -173,7 +173,6 @@ done
 if [ -n "${DEPLOY}" ]
 then
    make apply
-   echo "Im deploying because deploy is ${DEPLOY}"
 fi
 if [ -n "${COUNTER_STRIKE}" ] || [ -n "${CONDITION_ZERO}" ]
 then
@@ -186,27 +185,5 @@ then
 fi
 if [ -n "${DESTROY}" ]
 then
-    echo "Im destroying because destroy is ${DESTROY}"
     make destroy
 fi
-
-
-# case "$1" in
-#     deploy)
-#         make apply
-#         ;;
-#     install)
-#         get_server_ip_from_terraform_output
-#         check_required_variables_are_available
-#         can_i_login
-#         generate_inventory
-#         run_ansible
-#         print_instructions
-#         ;;
-#     destroy)
-#         make destroy
-#         ;;
-#     *)
-#         echo "${1} is not a supported command."
-# esac
-
