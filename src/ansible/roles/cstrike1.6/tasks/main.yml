@@ -1,40 +1,45 @@
 # Run three times to get all the updates and validate the package
-- name: update steamcmd
-  shell: steamcmd +quit
-
 - name: install cstrike
   shell: steamcmd +login "anonymous" +force_install_dir "./cs16server" +app_update "90 validate" +quit
+  become: no
   ignore_errors: yes
 
 - name: update cstrike
   shell: steamcmd +login "anonymous" +force_install_dir "./cs16server" +app_update "90 validate" +quit
+  become: no
   ignore_errors: yes
 
 - name: validate cstrike
   shell: steamcmd +login "anonymous" +force_install_dir "./cs16server" +app_update "90 validate" +quit
+  become: no
   ignore_errors: yes
 
-# TASK [cstrike : create listip.cfg] *************************************************************************************************************************************************************************
-# fatal: [server_ip]: FAILED! => {"changed": false, "msg": "Error, could not touch target: [Errno 2] No such file or directory: b'/home/ansible/.stream/steamcmd/c16server/listip.cfg'", "path": "/home/ansible/.stream/steamcmd/c16server/listip.cfg", "state": "absent"}
-
 - name: create listip.cfg
-  file:
-    path: /home/ansible/.stream/steamcmd/c16server/listip.cfg
-    state: touch
-    mode: u=rw,g=r,o=r
+  copy:
+    content: ""
+    dest: /home/ubuntu/.steam/steamcmd/cs16server/listip.cfg
+    force: no
+    group: ubuntu
+    owner: ubuntu
+    mode: 0555
+
 
 - name: create banned.cfg
-  file:
-    path: /home/ansible/.stream/steamcmd/c16server/listip.cfg
-    state: touch
-    mode: u=rw,g=r,o=r
+  copy:
+    content: ""
+    dest: /home/ubuntu/.steam/steamcmd/cs16server/banned.cfg
+    force: no
+    group: ubuntu
+    owner: ubuntu
+    mode: 0555
 
 - name: set rcon_password
-  shell: echo rcon_password {{ rcon_password }} > /home/ansible/.stream/steamcmd/c16server/listip.cfg
+  shell: echo rcon_password {{ rcon_password }} > /home/ubuntu/.steam/steamcmd/cs16server/listip.cfg
 
 - name: Ansible create file with content example
+  become: no
   copy:
-    dest: "/home/ansible/.stream/steamcmd/c16server/server.cfg"
+    dest: "/home/ubuntu/.steam/steamcmd/cs16server/server.cfg"
     content: |
       rcon_password {{ rcon_password }}
 
@@ -46,6 +51,15 @@
     force: yes
     backup: no
 
+- name: add execution script for hld_run
+  copy:
+    src:  ./start_cs.sh
+    dest: /home/ubuntu/start_cs.sh
+    mode: 0644
+    owner: ubuntu
+    group: ubuntu
+    mode: u+rwx,g+rwx,o+rwx
+ 
 - name: enable cstrike service
   systemd:
     name: cstrike

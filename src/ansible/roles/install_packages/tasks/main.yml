@@ -25,7 +25,6 @@
   apt:
     name: steamcmd
 
-#sudo add-apt-repository multiverse 
-#sudo dpkg --add-architecture i386
-#sudo apt-get update
-#sudo apt-get install lib32gcc1 steamcmd
+- name: update steamcmd
+  become: no
+  shell: steamcmd +quit
