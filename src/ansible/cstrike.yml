@@ -12,3 +12,5 @@
   - install_packages
   - iptables
   - cstrike1.6
+  - general_cs_tasks
+  - post_installation

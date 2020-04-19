@@ -12,6 +12,43 @@ function get_server_ip_from_terraform_output() {
     SERVER_IP=$(jq '.server_ip.value' ./terraform_output.json | sed 's/\"//g')
 }
 
+
+#######################################
+# Generate a random balue consisting of letters and numbers 32 characters long.
+# Globals:
+#   SERVER_IP
+# Arguments:
+#   None
+#######################################
+function random() {
+    echo $(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
+}
+
+#######################################
+# Set Required Defaults.
+# Globals:
+#   RCON_PASSWORD
+#   SV_PASSWORD
+#   HOSTNAME
+# Arguments:
+#   None
+#######################################
+function set_required_defaults() {
+    [ -n "${RCON_PASSWORD}" ] || { echo "Setting RCON_PASSWORD to Random value"; RCON_PASSWORD=$(random); }
+    [ -n "${SV_PASSWORD}" ] || { echo "Setting SV_PASSWORD to \"\""; SV_PASSWORD='""'; }
+    [ -n "${HOSTNAME}" ] || { echo "Setting HOSTANAME to CounterStrikeServer"; HOSTANAME="CounterStrikeServer"; }
+    if [[ ${CONDITION_ZERO} == 1 ]]
+    then
+        INSTALLATION_TYPE="condition_zero"
+    elif [[ ${COUNTER_STRIKE} == 1 ]]
+    then
+        INSTALLATION_TYPE="counter_strike"
+    else
+        INSTALLATION_TYPE="none"
+    fi 
+}
+
+
 #######################################
 # Generate ansible inventory file.
 # Globals:
@@ -31,6 +68,9 @@ server_ip ansible_host=${SERVER_IP}
 [cstrike:vars]
 ansible_user=ubuntu
 rcon_password=${RCON_PASSWORD}
+sv_password=${SV_PASSWORD}
+server_hostname=${HOSTNAME}
+installation_type=${INSTALLATION_TYPE}
 ansible_python_interpreter=/usr/bin/python3" > "${ANSIBLE_PATH}/cstrike_inventory"
 
 
@@ -76,7 +116,7 @@ function check_required_variables_are_available () {
     [ -n "${SERVER_IP}" ] || { echo "variable SERVER_IP does not exist; abort!"; exit 1; }
     [ -n "${ANSIBLE_PATH}" ] || { echo "variable ANSIBLE_PATH does not exist; abort!"; exit 1; }
     [ -n "${SSH_KEY_FILE}" ] || { echo "variable SSH_KEY_FILE does not exist; abort!"; exit 1; }
-    [ -n "${RCON_PASSWORD}" ] || { echo "variable RCON_PASSWORD please entery this on command line; abort!"; exit 1; }
+    
 }
 
 #######################################
@@ -97,7 +137,7 @@ function can_i_login() {
         if ssh -o BatchMode=yes \
         -o StrictHostKeyChecking=no \
         -o ConnectTimeout=5 \
-        -i ${SSH_KEY_FILE} \
+        -i "${SSH_KEY_FILE}" \
         ubuntu@"${SERVER_IP}" \
         echo "HOWDY GENTS"
         then
@@ -145,7 +185,9 @@ function print_help() {
 -y Destroy Infrastructure
 -c Install Counter Strike 1.6 Server
 -z Install Counter Strike Condition Zero Server
--r Specify RCON_PASSWORD value"
+[-r] Specify RCON_PASSWORD value
+[-p] Specify SV_PASSWORD value
+[-n] Specify HOSTNAME value"
 exit 0
 }
 
@@ -154,9 +196,9 @@ PWD="$(pwd)"
 ANSIBLE_PATH="${PWD}/src/ansible"
 # for now we assume the key to use for communicating with server is called cstrike.pem
 # and it resides in ~/.ssh
-SSH_KEY_FILE="~/.ssh/cstrike_rsa"
+SSH_KEY_FILE="${HOME}/.ssh/cstrike_rsa"
 
-while getopts :hdyczr: option
+while getopts :hdyczr:p:n: option
 do
     case "${option}"
     in
@@ -166,6 +208,8 @@ do
         c) COUNTER_STRIKE=1;;
         z) CONDITION_ZERO=1;;
         r) RCON_PASSWORD=${OPTARG};;
+        p) SV_PASSWORD=${OPTARG};;
+        n) HOSTNAME=${OPTARG};;
         *) print_help;;
     esac
 done
@@ -179,6 +223,7 @@ then
     get_server_ip_from_terraform_output
     check_required_variables_are_available
     can_i_login
+    set_required_defaults
     generate_inventory
     run_ansible
     print_instructions

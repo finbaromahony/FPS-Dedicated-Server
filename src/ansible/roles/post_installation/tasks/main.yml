@@ -1,0 +1,39 @@
+- name: get installation type
+  shell: echo {{ installation_type }}
+  register: itype
+
+- name: add execution script for hld_run condition zero
+  copy:
+    src:  ./start_cscz.sh
+    dest: /home/ubuntu/start_cs.sh
+    mode: 0644
+    owner: ubuntu
+    group: ubuntu
+    mode: u+rwx,g+rwx,o+rwx
+  when: installation_type == "condition_zero"
+
+- name: add execution script for hld_run counter strike 1.6
+  copy:
+    src:  ./start_cs.sh
+    dest: /home/ubuntu/start_cs.sh
+    mode: 0644
+    owner: ubuntu
+    group: ubuntu
+    mode: u+rwx,g+rwx,o+rwx
+  when: installation_type == "counter_strike"
+ 
+- name: enable cstrike service
+  systemd:
+    name: cstrike
+    enabled: yes
+
+- name: restart cstrike 1st time
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: cstrike
+
+- name: restart cstrike 2nd time
+  systemd:
+    state: restarted
+    name: cstrike

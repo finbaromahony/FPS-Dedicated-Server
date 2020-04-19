@@ -1,77 +1,15 @@
 # Run three times to get all the updates and validate the package
 - name: install cscz
-  shell: steamcmd +login "anonymous" +force_install_dir "./cscz/" +app_update 90 +app_set_config 90 mod czero validate +quit
+  shell: steamcmd +login "anonymous" +force_install_dir "./cs/" +app_update 90 +app_set_config 90 mod czero validate +quit
   become: no
   ignore_errors: yes
 
 - name: update cscz
-  shell: steamcmd +login "anonymous" +force_install_dir "./cscz/" +app_update 90 +app_set_config 90 mod czero validate +quit
+  shell: steamcmd +login "anonymous" +force_install_dir "./cs/" +app_update 90 +app_set_config 90 mod czero validate +quit
   become: no
   ignore_errors: yes
 
 - name: validate cscz
-  shell: steamcmd +login "anonymous" +force_install_dir "./cscz/" +app_update 90 +app_set_config 90 mod czero validate +quit
+  shell: steamcmd +login "anonymous" +force_install_dir "./cs/" +app_update 90 +app_set_config 90 mod czero validate +quit
   become: no
   ignore_errors: yes
-
-- name: create listip.cfg
-  copy:
-    content: ""
-    dest: /home/ubuntu/.steam/steamcmd/cscz/listip.cfg
-    force: no
-    group: ubuntu
-    owner: ubuntu
-    mode: 0555
-
-
-- name: create banned.cfg
-  copy:
-    content: ""
-    dest: /home/ubuntu/.steam/steamcmd/cscz/banned.cfg
-    force: no
-    group: ubuntu
-    owner: ubuntu
-    mode: 0555
-
-- name: set rcon_password
-  shell: echo rcon_password {{ rcon_password }} > /home/ubuntu/.steam/steamcmd/cscz/listip.cfg
-
-- name: create server.cfg
-  become: no
-  copy:
-    dest: "/home/ubuntu/.steam/steamcmd/cscz/server.cfg"
-    content: |
-      rcon_password {{ rcon_password }}
-
-- name: add systemctl file for cstrike
-  template:
-    src: cstrike.j2
-    dest: /etc/systemd/system/cscz.service
-    mode: 0644
-    force: yes
-    backup: no
-
-- name: add execution script for hld_run
-  copy:
-    src:  ./start_cs.sh
-    dest: /home/ubuntu/start_cs.sh
-    mode: 0644
-    owner: ubuntu
-    group: ubuntu
-    mode: u+rwx,g+rwx,o+rwx
- 
-- name: enable cstrike service
-  systemd:
-    name: cscz
-    enabled: yes
-
-- name: restart cstrike 1st time
-  systemd:
-    state: restarted
-    daemon_reload: yes
-    name: cscz
-
-- name: restart cstrike 2nd time
-  systemd:
-    state: restarted
-    name: cscz

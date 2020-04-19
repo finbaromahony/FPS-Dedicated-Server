@@ -12,3 +12,5 @@
   - install_packages
   - iptables
   - cscz
+  - general_cs_tasks
+  - post_installation

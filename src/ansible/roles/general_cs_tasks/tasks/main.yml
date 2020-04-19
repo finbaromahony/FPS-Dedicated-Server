@@ -1,0 +1,43 @@
+- name: create listip.cfg
+  copy:
+    content: ""
+    dest: /home/ubuntu/.steam/steamcmd/cs/listip.cfg
+    force: no
+    group: ubuntu
+    owner: ubuntu
+    mode: 0555
+
+- name: create banned.cfg
+  copy:
+    content: ""
+    dest: /home/ubuntu/.steam/steamcmd/cs/banned.cfg
+    force: no
+    group: ubuntu
+    owner: ubuntu
+    mode: 0555
+
+- name: set rcon_password
+  shell: echo rcon_password {{ rcon_password }} > /home/ubuntu/.steam/steamcmd/cs/listip.cfg
+
+- name: set sv_password
+  shell: echo sv_password {{ sv_password }} >> /home/ubuntu/.steam/steamcmd/cs/listip.cfg
+
+- name: set_hostname
+  shell: echo hostname {{ server_hostname }} >> /home/ubuntu/.steam/steamcmd/cs/listip.cfg
+
+- name: create server.cfg
+  become: no
+  copy:
+    dest: "/home/ubuntu/.steam/steamcmd/cs/server.cfg"
+    content: |
+      rcon_password "{{ rcon_password }}"
+
+
+
+- name: add systemctl file for cstrike
+  template:
+    src: cstrike.j2
+    dest: /etc/systemd/system/cstrike.service
+    mode: 0644
+    force: yes
+    backup: no
