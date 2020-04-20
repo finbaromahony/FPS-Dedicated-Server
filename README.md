@@ -26,7 +26,9 @@ Run `deploy_cstrike_server.sh` specifying the help command
 -y Destroy Infrastructure
 -c Install Counter Strike 1.6 Server
 -z Install Counter Strike Condition Zero Server
--r Specify RCON_PASSWORD value
+[-r] Specify RCON_PASSWORD value
+[-p] Specify SV_PASSWORD value
+[-n] Specify HOSTNAME value
 ```
 
 ## Deploying Instance
@@ -52,6 +54,14 @@ Run `deploy_cstrike_server.sh` specifying the install command
 ```shell
 ./deploy_cstrike_server.sh -z -r <rcon_password>
 ```
+
+## Specify server password and hostname [Optional]
+
+run `deploy_cstrike_server.sh` specifying install command with password and hostname
+```shell
+./deploy_cstrike_server.sh -z -r <rcon_password> -p <sv_password> -h <hostname>
+```
+
 ## Connecting to Counter Strike Dedicated Server
 
 Output of `deploy_strike_server.sh` will give the console command to run in counter-strike to run to access the server.
