@@ -162,7 +162,7 @@ function can_i_login() {
 #######################################
 function print_instructions() {
     echo "Press ~ to open command console and type"
-    echo "connect ${SERVER_IP}"
+    echo "connect ${SERVER_IP}; password ${SV_PASSWORD}"
     echo "To change password on server"
     echo "    - Press ~ to open command console and type"
     echo "    - rcon_password ${RCON_PASSWORD}"
