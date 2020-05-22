@@ -23,14 +23,14 @@
   when: installation_type == "counter_strike"
  
 -name: add execution script for global offensive
-  copy:
-    src: ./start_csgo.sh
-    dest: /home/ubuntu/start_cs.sh
+  template:
+    src: start_csgo.j2
+    dest: /home/ubuntu/start_csgo.sh
     mode: 0644
-    owner: ubuntu
-    group: ubuntu
-    mode: u+rwx,g+rwx,o+rwx
+    force: yes
+    backup: no
   when: installation_type == "global_offensive"
+
 
 - name: enable cstrike service
   systemd:
