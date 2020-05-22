@@ -1,0 +1,15 @@
+# Run three times to get all the updates and validate the package
+- name: install csgo
+  shell: steamcmd +login anonymous +force_install_dir ./csgo_server/ +app_update 740 validate +quit
+  become: no
+  ignore_errors: yes
+
+- name: update csgo
+  shell: steamcmd +login anonymous +force_install_dir ./csgo_server/ +app_update 740 validate +quit
+  become: no
+  ignore_errors: yes
+
+- name: validate csgo
+  shell: steamcmd +login anonymous +force_install_dir ./csgo_server/ +app_update 740 validate +quit
+  become: no
+  ignore_errors: yes

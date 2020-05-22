@@ -22,6 +22,16 @@
     mode: u+rwx,g+rwx,o+rwx
   when: installation_type == "counter_strike"
  
+-name: add execution script for global offensive
+  copy:
+    src: ./start_csgo.sh
+    dest: /home/ubuntu/start_cs.sh
+    mode: 0644
+    owner: ubuntu
+    group: ubuntu
+    mode: u+rwx,g+rwx,o+rwx
+  when: installation_type == "global_offensive"
+
 - name: enable cstrike service
   systemd:
     name: cstrike
