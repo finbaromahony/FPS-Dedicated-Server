@@ -43,7 +43,7 @@ function set_required_defaults() {
     elif [[ ${COUNTER_STRIKE} == 1 ]]
     then
         INSTALLATION_TYPE="counter_strike"
-    elif [[ ${GLOBAL_OFFENSIVE} ==1 ]]
+    elif [[ ${GLOBAL_OFFENSIVE} == 1 ]]
     then
         INSTALLATION_TYPE="global_offensive"
     else
@@ -217,7 +217,7 @@ ANSIBLE_PATH="${PWD}/src/ansible"
 # and it resides in ~/.ssh
 SSH_KEY_FILE="${HOME}/.ssh/cstrike_rsa"
 
-while getopts :hdyczr:p:n: option
+while getopts :hdyczga:r:p:n: option
 do
     case "${option}"
     in
