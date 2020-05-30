@@ -22,10 +22,10 @@
     mode: u+rwx,g+rwx,o+rwx
   when: installation_type == "counter_strike"
  
--name: add execution script for global offensive
+- name: add execution script for global offensive
   template:
     src: start_csgo.j2
-    dest: /home/ubuntu/start_csgo.sh
+    dest: /home/ubuntu/start_cs.sh
     mode: 0644
     force: yes
     backup: no
