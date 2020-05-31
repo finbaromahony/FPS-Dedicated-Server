@@ -202,7 +202,7 @@ function print_help() {
 -y Destroy Infrastructure
 -c Install Counter Strike 1.6 Server
 -z Install Counter Strike Condition Zero Server
--g Install Counter Strike Global Offensive
+-g Install Counter Strike Global Offensive Server
 [-a] Specify API_KEY value for CSGO
 [-r] Specify RCON_PASSWORD value
 [-p] Specify SV_PASSWORD value

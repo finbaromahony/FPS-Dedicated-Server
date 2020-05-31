@@ -22,10 +22,12 @@ Following instructions are for deploying from an Ubuntu Instance.
 Run `deploy_cstrike_server.sh` specifying the help command
 ```shell
 [-h]
--d Deploy Infrastucture
+-d Deploy Infrastructure
 -y Destroy Infrastructure
 -c Install Counter Strike 1.6 Server
 -z Install Counter Strike Condition Zero Server
+-g Install Counter Strike Global Offensive Server
+[-a] Specify API_KEY value for CSGO
 [-r] Specify RCON_PASSWORD value
 [-p] Specify SV_PASSWORD value
 [-n] Specify HOSTNAME value
@@ -55,11 +57,18 @@ Run `deploy_cstrike_server.sh` specifying the install command
 ./deploy_cstrike_server.sh -z -r <rcon_password>
 ```
 
+## Installing Counter Strike Global Offensive Dedicated Server
+
+Run `deploy_cstrike_server.sh` specifying the install command
+```shell
+./deploy_cstrike_server.sh -g -a <api_key>
+```
+
 ## Specify server password and hostname [Optional]
 
 run `deploy_cstrike_server.sh` specifying install command with password and hostname
 ```shell
-./deploy_cstrike_server.sh -z -r <rcon_password> -p <sv_password> -h <hostname>
+./deploy_cstrike_server.sh -z -r <rcon_password> -p <sv_password> -n <hostname>
 ```
 
 ## Connecting to Counter Strike Dedicated Server
