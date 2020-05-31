@@ -85,7 +85,7 @@ resource "aws_instance" "cstrike" {
   security_groups             = [aws_security_group.cstrike_security_group.name]
 
   root_block_device {
-    volume_size           = 30
+    volume_size           = 50
     volume_type           = "standard"
     delete_on_termination = true
   }

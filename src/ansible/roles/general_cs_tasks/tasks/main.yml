@@ -32,8 +32,6 @@
     content: |
       rcon_password "{{ rcon_password }}"
 
-
-
 - name: add systemctl file for cstrike
   template:
     src: cstrike.j2

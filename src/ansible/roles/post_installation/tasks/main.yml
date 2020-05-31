@@ -26,7 +26,7 @@
   template:
     src: start_csgo.j2
     dest: /home/ubuntu/start_cs.sh
-    mode: 0644
+    mode: u+rwx,g+rwx,o+rwx
     force: yes
     backup: no
   when: installation_type == "global_offensive"
@@ -36,14 +36,17 @@
   systemd:
     name: cstrike
     enabled: yes
+  when: installation_type != "global_offensive"
 
 - name: restart cstrike 1st time
   systemd:
     state: restarted
     daemon_reload: yes
     name: cstrike
+  when: installation_type != "global_offensive"
 
 - name: restart cstrike 2nd time
   systemd:
     state: restarted
     name: cstrike
+  when: installation_type != "global_offensive"
