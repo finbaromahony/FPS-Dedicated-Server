@@ -39,3 +39,4 @@
     mode: 0644
     force: yes
     backup: no
+  when: installation_type != "global_offensive"
