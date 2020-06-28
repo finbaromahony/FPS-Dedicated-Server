@@ -1,6 +1,3 @@
-# - apt_repository:
-#     repo: multiverse
-
 - name: add i386 architecture
   shell: dpkg --add-architecture i386
   become: yes
