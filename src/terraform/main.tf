@@ -90,5 +90,3 @@ resource "aws_instance" "cstrike" {
     delete_on_termination = true
   }
 }
-
-

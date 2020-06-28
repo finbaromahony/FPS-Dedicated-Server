@@ -67,3 +67,4 @@
     state: restarted
     name: cstrike
   when: installation_type != "global_offensive"
+  
