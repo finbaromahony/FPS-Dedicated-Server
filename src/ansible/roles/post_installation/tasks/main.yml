@@ -31,15 +31,6 @@
     backup: no
   when: installation_type == "global_offensive"
 
-- name: add gamemodes_server.txt reference file
-  copy:
-    src: ./gamemodes_server.txt
-    dest: /home/ubuntu/gamemodes_server.txt
-    owner: ubuntu
-    group: ubuntu
-    mode: u+rwx,g+rwx,o+rwx
-  when: installation_type == "global_offensive"
-
 - name: add update_csgo.sh script
   copy:
     src: ./update_csgo.sh
