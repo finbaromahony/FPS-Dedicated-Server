@@ -11,6 +11,7 @@
   roles:
   - install_packages
   - iptables
+  - post_installation
   - csgo
   - general_cs_tasks
-  - post_installation
+
