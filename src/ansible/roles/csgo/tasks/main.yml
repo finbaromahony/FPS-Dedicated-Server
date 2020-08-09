@@ -2,9 +2,9 @@
 - name: install csgo
   shell: steamcmd +login anonymous +force_install_dir "./cs/" +app_update 740 validate +quit
   become: no
-  ignore_errors: no
+  ignore_errors: yes
 
 - name: validate csgo
   shell: steamcmd +login anonymous +force_install_dir "./cs/" +app_update 740 validate +quit
   become: no
-  ignore_errors: no
+  ignore_errors: yes
