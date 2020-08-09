@@ -22,10 +22,12 @@ Following instructions are for deploying from an Ubuntu Instance.
 Run `deploy_cstrike_server.sh` specifying the help command
 ```shell
 [-h]
--d Deploy Infrastucture
+-d Deploy Infrastructure
 -y Destroy Infrastructure
 -c Install Counter Strike 1.6 Server
 -z Install Counter Strike Condition Zero Server
+-g Install Counter Strike Global Offensive Server
+[-a] Specify API_KEY value for CSGO
 [-r] Specify RCON_PASSWORD value
 [-p] Specify SV_PASSWORD value
 [-n] Specify HOSTNAME value
@@ -55,11 +57,18 @@ Run `deploy_cstrike_server.sh` specifying the install command
 ./deploy_cstrike_server.sh -z -r <rcon_password>
 ```
 
+## Installing Counter Strike Global Offensive Dedicated Server
+
+Run `deploy_cstrike_server.sh` specifying the install command
+```shell
+./deploy_cstrike_server.sh -g -a <api_key>
+```
+
 ## Specify server password and hostname [Optional]
 
 run `deploy_cstrike_server.sh` specifying install command with password and hostname
 ```shell
-./deploy_cstrike_server.sh -z -r <rcon_password> -p <sv_password> -h <hostname>
+./deploy_cstrike_server.sh -z -r <rcon_password> -p <sv_password> -n <hostname>
 ```
 
 ## Connecting to Counter Strike Dedicated Server
@@ -69,9 +78,38 @@ Output of `deploy_strike_server.sh` will give the console command to run in coun
 connect <SERVER_IP>
 ```
 
-### Destroying the Counter Strike Dedicated Server
+## Destroying the Counter Strike Dedicated Server
 
 Run `deploy_cstrike_server.sh` specifying the destroy command
-```
+```shell
 ./deploy_cstrike_server.sh -y
+```
+
+## Managing CSGO Dedicated Server
+
+Recommended screen is used to manage running terminal instance.
+
+```shell
+## ssh to instance
+ssh -i <ssh_key> ubuntu@<ip_address>
+## start csgo server
+## screen session recommended
+/home/ubuntu/start_csgo.sh
+```
+
+## Known issues
+
+Ansible is having issues installing CSGO...
+
+It exits when steam is attempting to get "user info"
+performing the operation manually does work.
+
+### Manual steps if CSGO installation fails
+
+```shell
+# log onto instance
+ssh -i <ssh_key> ubuntu@<ip_address>
+# run command to install CSGO
+steamcmd +login anonymous +force_install_dir "./cs/" +app_update 740 validate +quit
+# fill in start_csgo.j2 template and save it in /home/ubuntu as start_csgo.sh
 ```

@@ -6,5 +6,9 @@ instance_ip ansible_host=<instance public ip>
 
 [cstrike:vars]
 ansible_user=ubuntu
-rcon_password=<rcon password>
+rcon_password=<rcon_password>
+sv_password=<sv_password>
+server_hostname=<hostname>
+installation_type=<cstike|condition_zero|global_offensive}
+api_key=<api_key>//https://steamcommunity.com/dev/managegameservers
 ansible_python_interpreter=/usr/bin/python3

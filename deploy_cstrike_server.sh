@@ -3,7 +3,7 @@
 #######################################
 # Get SERVER_IP out of terraform output.
 # Globals:
-#   SERVER_IP
+#   None
 # Arguments:
 #   None
 #######################################
@@ -16,7 +16,7 @@ function get_server_ip_from_terraform_output() {
 #######################################
 # Generate a random balue consisting of letters and numbers 32 characters long.
 # Globals:
-#   SERVER_IP
+#   None
 # Arguments:
 #   None
 #######################################
@@ -30,6 +30,9 @@ function random() {
 #   RCON_PASSWORD
 #   SV_PASSWORD
 #   HOSTNAME
+#   CONDITION_ZERO
+#   COUNTER_STRIKE
+#   GLOBAL_OFFENSIVE
 # Arguments:
 #   None
 #######################################
@@ -43,6 +46,9 @@ function set_required_defaults() {
     elif [[ ${COUNTER_STRIKE} == 1 ]]
     then
         INSTALLATION_TYPE="counter_strike"
+    elif [[ ${GLOBAL_OFFENSIVE} == 1 ]]
+    then
+        INSTALLATION_TYPE="global_offensive"
     else
         INSTALLATION_TYPE="none"
     fi 
@@ -55,6 +61,11 @@ function set_required_defaults() {
 #   SSH_KEY_FILE
 #   SERVER_IP
 #   ANSIBLE_PATH
+#   RCON_PASSWORD
+#   SV_PASSWORD
+#   HOSTNAME
+#   INSTALLATION_TYPE
+#   API_KEY
 # Arguments:
 #   None
 #######################################
@@ -71,6 +82,7 @@ rcon_password=${RCON_PASSWORD}
 sv_password=${SV_PASSWORD}
 server_hostname=${HOSTNAME}
 installation_type=${INSTALLATION_TYPE}
+api_key=${API_KEY}
 ansible_python_interpreter=/usr/bin/python3" > "${ANSIBLE_PATH}/cstrike_inventory"
 
 
@@ -80,6 +92,9 @@ ansible_python_interpreter=/usr/bin/python3" > "${ANSIBLE_PATH}/cstrike_inventor
 # Run ansible to install and configure dedicated counter strike server
 # Globals:
 #   ANSIBLE_PATH
+#   COUNTER_STRIKE
+#   CONDITION_ZERO
+#   GLOBAL_OFFENSIVE
 # Arguments:
 #   None
 # Returns:
@@ -88,15 +103,21 @@ ansible_python_interpreter=/usr/bin/python3" > "${ANSIBLE_PATH}/cstrike_inventor
 function run_ansible() {
     if [ -n "${COUNTER_STRIKE}" ]
     then
-        echo "run ansible to install cstrike dedicated server on instance"
+        echo "Run ansible to install Counter Strike dedicated server on instance"
         /usr/bin/ansible-playbook -i "${ANSIBLE_PATH}"/cstrike_inventory \
                                      "${ANSIBLE_PATH}"/cstrike.yml
     fi
     if [ -n "${CONDITION_ZERO}" ]
     then
-        echo "run ansible to install cstrike condition zero dedicated server on instance"
+        echo "Run ansible to install Counter Strike Condition Zero dedicated server on instance"
         /usr/bin/ansible-playbook -i "${ANSIBLE_PATH}"/cstrike_inventory \
                                      "${ANSIBLE_PATH}"/cscz.yml
+    fi
+    if [ -n "${GLOBAL_OFFENSIVE}" ]
+    then
+        echo "Run ansible to install Counter Strike Global Offensive dedicated server on instance"
+        /usr/bin/ansible-playbook -i "${ANSIBLE_PATH}"/cstrike_inventory \
+                                     "${ANSIBLE_PATH}"/csgo.yml
     fi
 }
 
@@ -107,6 +128,8 @@ function run_ansible() {
 #   ANSIBLE_PATH
 #   SSH_KEY_FILE
 #   SERVER_IP
+#   GLOBAL_OFFENSIVE
+#   API_KEY
 # Arguments:
 #   None
 # Returns:
@@ -116,6 +139,10 @@ function check_required_variables_are_available () {
     [ -n "${SERVER_IP}" ] || { echo "variable SERVER_IP does not exist; abort!"; exit 1; }
     [ -n "${ANSIBLE_PATH}" ] || { echo "variable ANSIBLE_PATH does not exist; abort!"; exit 1; }
     [ -n "${SSH_KEY_FILE}" ] || { echo "variable SSH_KEY_FILE does not exist; abort!"; exit 1; }
+    if [ -n "${GLOBAL_OFFENSIVE}" ]
+    then
+        [ -n "${API_KEY}" ] || { echo "variable API_KEY does not exist and is required for CSGO; abort!"; exit 1; }
+    fi
     
 }
 
@@ -155,6 +182,8 @@ function can_i_login() {
 # Print instructions to connect to counter strike server
 # Globals:
 #   SERVER_IP
+#   SV_PASSWORD
+#   RCON_PASSWORD
 # Arguments:
 #   None
 # Returns:
@@ -185,6 +214,8 @@ function print_help() {
 -y Destroy Infrastructure
 -c Install Counter Strike 1.6 Server
 -z Install Counter Strike Condition Zero Server
+-g Install Counter Strike Global Offensive Server
+[-a] Specify API_KEY value for CSGO
 [-r] Specify RCON_PASSWORD value
 [-p] Specify SV_PASSWORD value
 [-n] Specify HOSTNAME value"
@@ -198,7 +229,7 @@ ANSIBLE_PATH="${PWD}/src/ansible"
 # and it resides in ~/.ssh
 SSH_KEY_FILE="${HOME}/.ssh/cstrike_rsa"
 
-while getopts :hdyczr:p:n: option
+while getopts :hdyczga:r:p:n: option
 do
     case "${option}"
     in
@@ -207,6 +238,8 @@ do
         y) DESTROY=1;;
         c) COUNTER_STRIKE=1;;
         z) CONDITION_ZERO=1;;
+        g) GLOBAL_OFFENSIVE=1;;
+        a) API_KEY=${OPTARG};;
         r) RCON_PASSWORD=${OPTARG};;
         p) SV_PASSWORD=${OPTARG};;
         n) HOSTNAME=${OPTARG};;
@@ -218,7 +251,7 @@ if [ -n "${DEPLOY}" ]
 then
    make apply
 fi
-if [ -n "${COUNTER_STRIKE}" ] || [ -n "${CONDITION_ZERO}" ]
+if [ -n "${COUNTER_STRIKE}" ] || [ -n "${CONDITION_ZERO}" ] || [ -n "${GLOBAL_OFFENSIVE}" ]
 then
     get_server_ip_from_terraform_output
     check_required_variables_are_available

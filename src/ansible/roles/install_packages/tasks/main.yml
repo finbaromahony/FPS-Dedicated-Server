@@ -1,6 +1,3 @@
-# - apt_repository:
-#     repo: multiverse
-
 - name: add i386 architecture
   shell: dpkg --add-architecture i386
   become: yes
@@ -20,6 +17,10 @@
 
 - name: pre-seed licence for stream licence agreement
   shell: echo steam steam/license note '' | sudo debconf-set-selections
+
+- name: install libsdl2 to prevent steam issues
+  apt:
+    name: libsdl2-2.0-0:i386
 
 - name: install steamcmd
   apt:

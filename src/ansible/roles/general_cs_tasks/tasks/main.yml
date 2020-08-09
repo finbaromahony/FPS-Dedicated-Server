@@ -1,3 +1,4 @@
+# Common tasks
 - name: create listip.cfg
   copy:
     content: ""
@@ -16,15 +17,6 @@
     owner: ubuntu
     mode: 0555
 
-- name: set rcon_password
-  shell: echo rcon_password {{ rcon_password }} > /home/ubuntu/.steam/steamcmd/cs/listip.cfg
-
-- name: set sv_password
-  shell: echo sv_password {{ sv_password }} >> /home/ubuntu/.steam/steamcmd/cs/listip.cfg
-
-- name: set_hostname
-  shell: echo hostname {{ server_hostname }} >> /home/ubuntu/.steam/steamcmd/cs/listip.cfg
-
 - name: create server.cfg
   become: no
   copy:
@@ -32,7 +24,28 @@
     content: |
       rcon_password "{{ rcon_password }}"
 
+# CSGO tasks
+- name: configure autoexec.cfg
+  template:
+    src: autoexec.j2
+    dest: /home/ubuntu/.steam/steamcmd/cs/csgo/cfg/autoexec.cfg
+    mode: 0555
+    force: yes
+    backup: no
+  when: installation_type == "global_offensive"
 
+# Non-CSGO tasks
+- name: set rcon_password_legacy
+  shell: echo rcon_password {{ rcon_password }} > /home/ubuntu/.steam/steamcmd/cs/listip.cfg
+  when: installation_type != "global_offensive"
+
+- name: set sv_password
+  shell: echo sv_password {{ sv_password }} >> /home/ubuntu/.steam/steamcmd/cs/listip.cfg
+  when: installation_type != "global_offensive"
+
+- name: set_hostname_legacy
+  shell: echo hostname {{ server_hostname }} >> /home/ubuntu/.steam/steamcmd/cs/listip.cfg
+  when: installation_type != "global_offensive"
 
 - name: add systemctl file for cstrike
   template:
@@ -41,3 +54,4 @@
     mode: 0644
     force: yes
     backup: no
+  when: installation_type != "global_offensive"

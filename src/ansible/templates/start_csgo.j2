@@ -1,0 +1,35 @@
+#!/bin/bash
+#########################################
+# Best Practice would be to run this command in a screen
+# As to have access to the console you cannot run this command
+# using systemctl
+#########################################
+/home/ubuntu/.steam/steamcmd/cs/srcds_run -game csgo \
+-console \
+-usercon \
++game_type 0 \
++game_mode 0 \
++map cs_agency \
++sv_setsteamaccount {{ api_key }} \
++sv_password {{ sv_password }} \
+-net_port_try 1
+
+
+###############################################
+# Further Options
+###############################################
+
+## Competitive
+# srcds -game csgo -console -usercon +game_type 0 +game_mode 1 +mapgroup mg_active +map de_dust2 +sv_setsteamaccount “YOUR AUTH TOKEN”
+
+## Casual
+# srcds -game csgo -console -usercon +game_type 0 +game_mode 0 +mapgroup mg_active +map de_dust2 +sv_setsteamaccount “YOUR AUTH TOKEN”
+
+## Arms Race
+# srcds -game csgo -console -usercon +game_type 1 +game_mode 0 +mapgroup mg_armsrace +map ar_shoots +sv_setsteamaccount “YOUR AUTH TOKEN”
+
+## Demolition
+# srcds -game csgo -console -usercon +game_type 1 +game_mode 1 +mapgroup mg_demolition +map de_lake +sv_setsteamaccount “YOUR AUTH TOKEN”
+
+## Deathmatch
+# srcds -game csgo -console -usercon +game_type 1 +game_mode 2 +mapgroup mg_allclassic +map de_dust +sv_setsteamaccount “YOUR AUTH TOKEN”
