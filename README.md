@@ -78,9 +78,38 @@ Output of `deploy_strike_server.sh` will give the console command to run in coun
 connect <SERVER_IP>
 ```
 
-### Destroying the Counter Strike Dedicated Server
+## Destroying the Counter Strike Dedicated Server
 
 Run `deploy_cstrike_server.sh` specifying the destroy command
-```
+```shell
 ./deploy_cstrike_server.sh -y
+```
+
+## Managing CSGO Dedicated Server
+
+Recommended screen is used to manage running terminal instance.
+
+```shell
+## ssh to instance
+ssh -i <ssh_key> ubuntu@<ip_address>
+## start csgo server
+## screen session recommended
+/home/ubuntu/start_csgo.sh
+```
+
+## Known issues
+
+Ansible is having issues installing CSGO...
+
+It exits when steam is attempting to get "user info"
+performing the operation manually does work.
+
+### Manual steps if CSGO installation fails
+
+```shell
+# log onto instance
+ssh -i <ssh_key> ubuntu@<ip_address>
+# run command to install CSGO
+steamcmd +login anonymous +force_install_dir "./cs/" +app_update 740 validate +quit
+# fill in start_csgo.j2 template and save it in /home/ubuntu as start_csgo.sh
 ```

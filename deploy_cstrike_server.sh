@@ -3,7 +3,7 @@
 #######################################
 # Get SERVER_IP out of terraform output.
 # Globals:
-#   SERVER_IP
+#   None
 # Arguments:
 #   None
 #######################################
@@ -16,7 +16,7 @@ function get_server_ip_from_terraform_output() {
 #######################################
 # Generate a random balue consisting of letters and numbers 32 characters long.
 # Globals:
-#   SERVER_IP
+#   None
 # Arguments:
 #   None
 #######################################
@@ -30,6 +30,9 @@ function random() {
 #   RCON_PASSWORD
 #   SV_PASSWORD
 #   HOSTNAME
+#   CONDITION_ZERO
+#   COUNTER_STRIKE
+#   GLOBAL_OFFENSIVE
 # Arguments:
 #   None
 #######################################
@@ -58,6 +61,11 @@ function set_required_defaults() {
 #   SSH_KEY_FILE
 #   SERVER_IP
 #   ANSIBLE_PATH
+#   RCON_PASSWORD
+#   SV_PASSWORD
+#   HOSTNAME
+#   INSTALLATION_TYPE
+#   API_KEY
 # Arguments:
 #   None
 #######################################
@@ -120,6 +128,8 @@ function run_ansible() {
 #   ANSIBLE_PATH
 #   SSH_KEY_FILE
 #   SERVER_IP
+#   GLOBAL_OFFENSIVE
+#   API_KEY
 # Arguments:
 #   None
 # Returns:
@@ -172,6 +182,8 @@ function can_i_login() {
 # Print instructions to connect to counter strike server
 # Globals:
 #   SERVER_IP
+#   SV_PASSWORD
+#   RCON_PASSWORD
 # Arguments:
 #   None
 # Returns:
