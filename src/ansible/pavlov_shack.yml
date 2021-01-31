@@ -1,6 +1,6 @@
 ---
 #
-# counter-strike-server playbook
+# pavlov-shack playbook
 #
 
 - hosts: fps
@@ -10,7 +10,8 @@
     PATH: "{{ ansible_env.PATH }}:/usr/games"
   roles:
   - install_packages
-  - cs_iptables
-  - cstrike1.6
-  - general_cs_tasks
-  - cs_post_installation
+  - iptables
+  - pavlov_shack
+  # - cstrike1.6
+  # - general_cs_tasks
+  - pavlov_post_installation

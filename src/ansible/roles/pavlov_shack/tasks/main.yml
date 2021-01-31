@@ -1,0 +1,15 @@
+# Run three times to get all the updates and validate the package
+- name: install pavlov shack
+  shell: steamcmd +login "anonymous" +force_install_dir "./pavlovserver" +app_update 622970 -beta shack +quit
+  become: no
+  ignore_errors: yes
+
+- name: update pavlov shack
+  shell: steamcmd +login "anonymous" +force_install_dir "./pavlovserver" +app_update 622970 -beta shack +quit
+  become: no
+  ignore_errors: yes
+
+# - name: validate pavlov shack
+#   shell: steamcmd +login "anonymous" +force_install_dir "./pavlovserver" +app_update 622970 -beta shack +quit
+#   become: no
+#   ignore_errors: yes

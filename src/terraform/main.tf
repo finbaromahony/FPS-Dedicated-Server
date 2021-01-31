@@ -34,8 +34,8 @@ data "aws_ami" "ubuntu-18_04" {
   }
 }
 
-resource "aws_security_group" "cstrike_security_group" {
-  name        = "cstrike_security_group"
+resource "aws_security_group" "fps_security_group" {
+  name        = "fps_security_group"
   description = "Allow traffic required for counter strike"
 
   # Allow SSH from anywhere
@@ -48,7 +48,7 @@ resource "aws_security_group" "cstrike_security_group" {
   }
 
   ingress {
-    description = "Allow udp ports first set"
+    description = "Allow udp ports first set CS"
     from_port   = 27000
     to_port     = 27030
     protocol    = "udp"
@@ -56,9 +56,31 @@ resource "aws_security_group" "cstrike_security_group" {
   }
 
   ingress {
-    description = "Allow udp ports second set"
+    description = "Allow udp ports second set CS"
     from_port   = 4380
     to_port     = 4380
+    protocol    = "udp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "Allow icmp"
+    protocol    = "icmp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "Allow udp ports 1st set pavlov"
+    from_port   = 7777
+    to_port     = 7777
+    protocol    = "udp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "Allow udp ports 2st set pavlov"
+    from_port   = 8177
+    to_port     = 8177
     protocol    = "udp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -76,13 +98,13 @@ resource "aws_security_group" "cstrike_security_group" {
   }
 }
 
-resource "aws_instance" "cstrike" {
+resource "aws_instance" "fps" {
   ami                         = data.aws_ami.ubuntu-18_04.id
   instance_type               = var.instance_type
   key_name                    = var.key_name
   associate_public_ip_address = true
   monitoring                  = false
-  security_groups             = [aws_security_group.cstrike_security_group.name]
+  security_groups             = [aws_security_group.fps_security_group.name]
 
   root_block_device {
     volume_size           = 50

@@ -1,0 +1,25 @@
+# Make Pavlov Script executable
+-name: Make Pavlov Script executable
+  file:
+    path: /home/ubuntu/.steam/steamcmd/pavlovserver/PavlovServer.sh
+    mode: a+x
+
+# Create required folders
+- name: Create Logs Directory
+  file:
+    path: /home/ubuntu/.steam/steamcmd/pavlovserver/Pavlov/Saved/Logs
+    state: directory
+
+- name: Create LinuxServer Directory
+  file:
+    path: /home/ubuntu/.steam/steamcmd/pavlovserver/Pavlov/Saved/Config/LinuxServer
+    state: directory
+
+# Configure Game.ini
+- name: configure Game.ini
+  template:
+    src: Pavlov_Game.j2
+    dest: /home/ubuntu/.steam/steamcmd/pavlovserver/Pavlov/Saved/Config/LinuxServer/Game.ini
+    mode: 0555
+    force: yes
+    backup: no

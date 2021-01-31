@@ -10,7 +10,7 @@ variable "instance_type" {
 
 variable "key_name" {
   type    = string
-  default = "cstrike"
+  default = "fps_dedicated_rsa"
 }
 
 variable "ubuntu_account_number" {

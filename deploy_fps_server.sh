@@ -40,7 +40,7 @@ function random() {
 function set_required_defaults() {
     [ -n "${RCON_PASSWORD}" ] || { echo "Setting RCON_PASSWORD to Random value"; RCON_PASSWORD=$(random); }
     [ -n "${SV_PASSWORD}" ] || { echo "Setting SV_PASSWORD to \"\""; SV_PASSWORD='""'; }
-    [ -n "${HOSTNAME}" ] || { echo "Setting HOSTANAME to CounterStrikeServer"; HOSTANAME="CounterStrikeServer"; }
+    [ -n "${HOSTNAME}" ] || { echo "Setting HOSTANAME to FPS-Server"; HOSTANAME="FPS-Server"; }
     if [[ ${CONDITION_ZERO} == 1 ]]
     then
         INSTALLATION_TYPE="condition_zero"
@@ -78,9 +78,9 @@ function generate_inventory() {
     echo "[all:vars]
 ansible_connection=ssh
 ansible_private_key_file=${SSH_KEY_FILE}
-[cstrike]
+[fps]
 server_ip ansible_host=${SERVER_IP}
-[cstrike:vars]
+[fps:vars]
 ansible_user=ubuntu
 rcon_password=${RCON_PASSWORD}
 sv_password=${SV_PASSWORD}
@@ -168,7 +168,7 @@ function check_required_variables_are_available () {
 #   None
 #######################################
 function can_i_login() {
-    echo "cstrike server ip address is ${SERVER_IP}"
+    echo "fps server ip address is ${SERVER_IP}"
     count=20
     while [[ "${count}" -gt 0 ]]
     do
@@ -237,7 +237,7 @@ exit 0
 
 PWD="$(pwd)"
 ANSIBLE_PATH="${PWD}/src/ansible"
-# for now we assume the key to use for communicating with server is called cstrike.pem
+# for now we assume the key to use for communicating with server is called fps_dedicated_rsa
 # and it resides in ~/.ssh
 SSH_KEY_FILE="${HOME}/.ssh/fps_dedicated_rsa"
 

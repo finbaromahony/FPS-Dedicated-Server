@@ -3,15 +3,14 @@
 # counter-strike-condition-zero server playbook
 #
 
-- hosts: cstrike
+- hosts: fps
   remote_user: ubuntu
   become: yes
   environment:
     PATH: "{{ ansible_env.PATH }}:/usr/games"
   roles:
   - install_packages
-  - iptables
-  - post_installation
+  - cs_iptables
   - csgo
   - general_cs_tasks
-
+  - cs_post_installation
