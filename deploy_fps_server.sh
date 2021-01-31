@@ -33,6 +33,7 @@ function random() {
 #   CONDITION_ZERO
 #   COUNTER_STRIKE
 #   GLOBAL_OFFENSIVE
+#   PAVLOV_SHACK
 # Arguments:
 #   None
 #######################################
@@ -49,6 +50,9 @@ function set_required_defaults() {
     elif [[ ${GLOBAL_OFFENSIVE} == 1 ]]
     then
         INSTALLATION_TYPE="global_offensive"
+    elif [[ ${PAVLOV_SHACK} == 1 ]]
+    then
+        INSTALLATION_TYPE="pavlov_shack"
     else
         INSTALLATION_TYPE="none"
     fi 
@@ -83,7 +87,7 @@ sv_password=${SV_PASSWORD}
 server_hostname=${HOSTNAME}
 installation_type=${INSTALLATION_TYPE}
 api_key=${API_KEY}
-ansible_python_interpreter=/usr/bin/python3" > "${ANSIBLE_PATH}/cstrike_inventory"
+ansible_python_interpreter=/usr/bin/python3" > "${ANSIBLE_PATH}/fps_inventory"
 
 
 }
@@ -95,6 +99,7 @@ ansible_python_interpreter=/usr/bin/python3" > "${ANSIBLE_PATH}/cstrike_inventor
 #   COUNTER_STRIKE
 #   CONDITION_ZERO
 #   GLOBAL_OFFENSIVE
+#   PAVLOV_SHACK
 # Arguments:
 #   None
 # Returns:
@@ -104,20 +109,26 @@ function run_ansible() {
     if [ -n "${COUNTER_STRIKE}" ]
     then
         echo "Run ansible to install Counter Strike dedicated server on instance"
-        /usr/bin/ansible-playbook -i "${ANSIBLE_PATH}"/cstrike_inventory \
+        /usr/bin/ansible-playbook -i "${ANSIBLE_PATH}"/fps_inventory \
                                      "${ANSIBLE_PATH}"/cstrike.yml
     fi
     if [ -n "${CONDITION_ZERO}" ]
     then
         echo "Run ansible to install Counter Strike Condition Zero dedicated server on instance"
-        /usr/bin/ansible-playbook -i "${ANSIBLE_PATH}"/cstrike_inventory \
+        /usr/bin/ansible-playbook -i "${ANSIBLE_PATH}"/fps_inventory \
                                      "${ANSIBLE_PATH}"/cscz.yml
     fi
     if [ -n "${GLOBAL_OFFENSIVE}" ]
     then
         echo "Run ansible to install Counter Strike Global Offensive dedicated server on instance"
-        /usr/bin/ansible-playbook -i "${ANSIBLE_PATH}"/cstrike_inventory \
+        /usr/bin/ansible-playbook -i "${ANSIBLE_PATH}"/fps_inventory \
                                      "${ANSIBLE_PATH}"/csgo.yml
+    fi
+    if [ -n "${PAVLOV_SHACK}" ]
+    then
+        echo "Run ansible to install Pavlov-Shack dedicated server on instance"
+        /usr/bin/ansible-playbook -i "${ANSIBLE_PATH}"/fps_inventory \
+                                     "${ANSIBLE_PATH}"/pavlov_shack.yml
     fi
 }
 
@@ -215,6 +226,7 @@ function print_help() {
 -c Install Counter Strike 1.6 Server
 -z Install Counter Strike Condition Zero Server
 -g Install Counter Strike Global Offensive Server
+-s Install Pavlov Shack Server
 [-a] Specify API_KEY value for CSGO
 [-r] Specify RCON_PASSWORD value
 [-p] Specify SV_PASSWORD value
@@ -227,9 +239,9 @@ PWD="$(pwd)"
 ANSIBLE_PATH="${PWD}/src/ansible"
 # for now we assume the key to use for communicating with server is called cstrike.pem
 # and it resides in ~/.ssh
-SSH_KEY_FILE="${HOME}/.ssh/cstrike_rsa"
+SSH_KEY_FILE="${HOME}/.ssh/fps_dedicated_rsa"
 
-while getopts :hdyczga:r:p:n: option
+while getopts :hdyczgsa:r:p:n: option
 do
     case "${option}"
     in
@@ -239,6 +251,7 @@ do
         c) COUNTER_STRIKE=1;;
         z) CONDITION_ZERO=1;;
         g) GLOBAL_OFFENSIVE=1;;
+        s) PAVLOV_SHACK=1;;
         a) API_KEY=${OPTARG};;
         r) RCON_PASSWORD=${OPTARG};;
         p) SV_PASSWORD=${OPTARG};;
@@ -251,7 +264,7 @@ if [ -n "${DEPLOY}" ]
 then
    make apply
 fi
-if [ -n "${COUNTER_STRIKE}" ] || [ -n "${CONDITION_ZERO}" ] || [ -n "${GLOBAL_OFFENSIVE}" ]
+if [ -n "${COUNTER_STRIKE}" ] || [ -n "${CONDITION_ZERO}" ] || [ -n "${GLOBAL_OFFENSIVE}" ] || [ -n "${PAVLOV_SHACK}" ]
 then
     get_server_ip_from_terraform_output
     check_required_variables_are_available

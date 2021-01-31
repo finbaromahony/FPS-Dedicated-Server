@@ -1,7 +1,28 @@
-# counter-strike-server
-Deploy counter-strike-server for use with original version of counter-strike
+# FPS-Dedicated-Server
+Deploy First Person Shooter Dedicated Server for use with a number of games
+- Counter Strike 1.6
+- Counter Strike Condition Zero
+- Counter Strike Global Offensive
+- Pavlov Shack (Quest 2 version)
 
-## Pre-requisites
+
+## Table of Contents
+- [Pre-requisites](#prereq)
+- [help](#help)
+- [installation](#installation)
+  - [deploy instance](#deploy)
+  - [Counter Strike 1.6](#one_point_six)
+  - [Counter Strike Condition Zero](#zero)
+  - [Counter Strike Global Offensive](#CSGO)
+  - [Pavlov Shack (Quest)](#pavshack)
+  - [Set Password & Hostname](#password_hostname)
+- [Destroy Instance](#destroy)
+- [Manage Instance](#manage)
+- [Connect to instance](#connect)
+- [Known Issues](#known_issues)
+
+
+## Pre-requisites <a name="prereq"></a>
 
 Following instructions are for deploying from an Ubuntu Instance.
 
@@ -17,7 +38,7 @@ Following instructions are for deploying from an Ubuntu Instance.
   aws ec2 import-key-pair  --key-name cstrike --public-key-material "ssh-rsa XXXXHXHHXHX youruser@yourdomain.com"
   ```
 
-## Viewing Help
+## Viewing Help <a name="help"></a>
 
 Run `deploy_cstrike_server.sh` specifying the help command
 ```shell
@@ -27,65 +48,68 @@ Run `deploy_cstrike_server.sh` specifying the help command
 -c Install Counter Strike 1.6 Server
 -z Install Counter Strike Condition Zero Server
 -g Install Counter Strike Global Offensive Server
+-s Install Pavlov Shack Server
 [-a] Specify API_KEY value for CSGO
 [-r] Specify RCON_PASSWORD value
 [-p] Specify SV_PASSWORD value
 [-n] Specify HOSTNAME value
 ```
 
-## Deploying Instance
+## Install Dedicated Server Examples <a name="installation"></a>
+The following is a number of examples for installing dedicated servers
 
-Run `deploy_cstrike_server.sh` specifying the deploy command
+### Deploying Instance <a name="deploy"></a>
+
+Run `deploy_fps_server.sh` specifying the deploy command
 ```shell
-./deploy_cstrike_server.sh -d
+./deploy_fps_server.sh -d
 ```
 Alternatively you could run the Makefile directly
 ```shell
 make apply
 ```
+### Installing Counter Strike Dedicated Server 1.6 <a name="one_point_six"></a>
 
-## Installing Counter Strike Dedicated Server
-
-Run `deploy_cstrike_server.sh` specifying the install command
+Run `deploy_fps_server.sh` specifying the install command
 ```shell
-./deploy_cstrike_server.sh  -c -r <rcon_password>
+./deploy_fps_server.sh  -c -r <rcon_password>
 ```
-## Installing Counter Strike Condition Zero Dedicated Server
+### Installing Counter Strike Condition Zero Dedicated Server <a name="zero"></a>
 
-Run `deploy_cstrike_server.sh` specifying the install command
+Run `deploy_fps_server.sh` specifying the install command
 ```shell
-./deploy_cstrike_server.sh -z -r <rcon_password>
-```
-
-## Installing Counter Strike Global Offensive Dedicated Server
-
-Run `deploy_cstrike_server.sh` specifying the install command
-```shell
-./deploy_cstrike_server.sh -g -a <api_key>
+./deploy_fps_server.sh -z -r <rcon_password>
 ```
 
-## Specify server password and hostname [Optional]
+### Installing Counter Strike Global Offensive Dedicated Server <a name="CSGO"></a>
 
-run `deploy_cstrike_server.sh` specifying install command with password and hostname
+Run `deploy_fps_server.sh` specifying the install command
 ```shell
-./deploy_cstrike_server.sh -z -r <rcon_password> -p <sv_password> -n <hostname>
+./deploy_fps_server.sh -g -a <api_key>
 ```
 
-## Connecting to Counter Strike Dedicated Server
+### Specify server password and hostname [Optional] <a name="password_hostname"></a>
+
+run `deploy_fps_server.sh` specifying install command with password and hostname
+```shell
+./deploy_fps_server.sh -z -r <rcon_password> -p <sv_password> -n <hostname>
+```
+
+### Connecting to Counter Strike Dedicated Server <a name="connect"></a>
 
 Output of `deploy_strike_server.sh` will give the console command to run in counter-strike to run to access the server.
 ```shell
 connect <SERVER_IP>
 ```
 
-## Destroying the Counter Strike Dedicated Server
+### Destroying the Counter Strike Dedicated Server <a name="destroy"></a>
 
-Run `deploy_cstrike_server.sh` specifying the destroy command
+Run `deploy_fps_server.sh` specifying the destroy command
 ```shell
-./deploy_cstrike_server.sh -y
+./deploy_fps_server.sh -y
 ```
 
-## Managing CSGO Dedicated Server
+## Managing CSGO Dedicated Server <a name="manage"></a>
 
 Recommended screen is used to manage running terminal instance.
 
@@ -97,7 +121,7 @@ ssh -i <ssh_key> ubuntu@<ip_address>
 /home/ubuntu/start_csgo.sh
 ```
 
-## Known issues
+## Known issues <a name="known_issues"></a>
 
 Ansible is having issues installing CSGO...
 
