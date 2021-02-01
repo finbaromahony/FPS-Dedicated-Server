@@ -77,7 +77,7 @@ resource "aws_security_group" "fps_security_group" {
     to_port     = 7777
     protocol    = "udp"
     cidr_blocks = ["0.0.0.0/0"]
-  }y
+  }
 
   ingress {
     description = "Allow udp ports 2st set pavlov"
