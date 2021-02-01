@@ -32,8 +32,8 @@ Following instructions are for deploying from an Ubuntu Instance.
 - You have upgraded awscli `pip install --upgrade awscli --user`
 - You have generated a key-pair called `fps_dedicated_rsa` and have imported it to AWS as `cstrike`
   ```shell
-  ssh-keygen
-  chmod 600 fps_dedicated_rsa
+  ssh-keygen -f ~/.ssh/fps_dedicated_rsa -t rsa -b 4096
+  chmod 600 ~/.ssh/fps_dedicated_rsa
   # cat fps_dedicated_rsa.pub to get the string required for the public-key-material
   aws ec2 import-key-pair  --key-name fps_dedicated_rsa --public-key-material "ssh-rsa XXXXHXHHXHX youruser@yourdomain.com"
   ```
