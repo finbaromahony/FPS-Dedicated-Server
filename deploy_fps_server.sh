@@ -40,7 +40,7 @@ function random() {
 function set_required_defaults() {
     [ -n "${RCON_PASSWORD}" ] || { echo "Setting RCON_PASSWORD to Random value"; RCON_PASSWORD=$(random); }
     [ -n "${SV_PASSWORD}" ] || { echo "Setting SV_PASSWORD to \"\""; SV_PASSWORD='""'; }
-    [ -n "${HOSTNAME}" ] || { echo "Setting HOSTANAME to FPS-Server"; HOSTANAME="FPS-Server"; }
+    [ -n "${HOSTNAME}" ] || { echo "Setting HOSTNAME to FPS-Server"; HOSTNAME="FPS-Server"; }
     if [[ ${CONDITION_ZERO} == 1 ]]
     then
         INSTALLATION_TYPE="condition_zero"
