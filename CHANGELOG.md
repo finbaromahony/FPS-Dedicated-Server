@@ -18,3 +18,11 @@ All notable changes to this project will be documented in this file.
 
 
 ### Fixed
+
+## [pre-versioning]
+
+### Added
+
+- CSGO support
+- CS: Condition Zero support
+- CS 1.6 support

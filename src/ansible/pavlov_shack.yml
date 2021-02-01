@@ -10,8 +10,6 @@
     PATH: "{{ ansible_env.PATH }}:/usr/games"
   roles:
   - install_packages
-  - iptables
+  # - pavlov_iptables
   - pavlov_shack
-  # - cstrike1.6
-  # - general_cs_tasks
   - pavlov_post_installation
