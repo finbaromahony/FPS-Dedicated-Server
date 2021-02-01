@@ -30,17 +30,17 @@ Following instructions are for deploying from an Ubuntu Instance.
 - You are authenticated with AWS and have credentials in ~/.aws/credentials
 - You have installed awscli `sudo apt-get install awscli`
 - You have upgraded awscli `pip install --upgrade awscli --user`
-- You have generated a key-pair called `cstrike_rsa` and have imported it to AWS as `cstrike`
+- You have generated a key-pair called `fps_dedicated_rsa` and have imported it to AWS as `cstrike`
   ```shell
   ssh-keygen
-  chmod 600 cstrike_rsa
-  # cat cstrike_rsa.pub to get the string required for the public-key-material
-  aws ec2 import-key-pair  --key-name cstrike --public-key-material "ssh-rsa XXXXHXHHXHX youruser@yourdomain.com"
+  chmod 600 fps_dedicated_rsa
+  # cat fps_dedicated_rsa.pub to get the string required for the public-key-material
+  aws ec2 import-key-pair  --key-name fps_dedicated_rsa --public-key-material "ssh-rsa XXXXHXHHXHX youruser@yourdomain.com"
   ```
 
 ## Viewing Help <a name="help"></a>
 
-Run `deploy_cstrike_server.sh` specifying the help command
+Run `deploy_fps_server.sh` specifying the help command
 ```shell
 [-h]
 -d Deploy Infrastructure
@@ -97,7 +97,7 @@ run `deploy_fps_server.sh` specifying install command with password and hostname
 
 ### Connecting to Counter Strike Dedicated Server <a name="connect"></a>
 
-Output of `deploy_strike_server.sh` will give the console command to run in counter-strike to run to access the server.
+Output of `deploy_fps_server.sh` will give the console command to run in counter-strike to run to access the server.
 ```shell
 connect <SERVER_IP>
 ```
