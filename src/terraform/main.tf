@@ -36,7 +36,7 @@ data "aws_ami" "ubuntu-18_04" {
 
 resource "aws_security_group" "fps_security_group" {
   name        = "fps_security_group"
-  description = "Allow traffic required for counter strike"
+  description = "Allow traffic required for counter strike and pavlov"
 
   # Allow SSH from anywhere
   ingress {
@@ -64,8 +64,10 @@ resource "aws_security_group" "fps_security_group" {
   }
 
   ingress {
-    description = "Allow icmp"
-    protocol    = "icmp"
+    description = "Allow incoming pings"
+    from_port = 8
+    to_port = 0
+    protocol = "icmp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -75,7 +77,7 @@ resource "aws_security_group" "fps_security_group" {
     to_port     = 7777
     protocol    = "udp"
     cidr_blocks = ["0.0.0.0/0"]
-  }
+  }y
 
   ingress {
     description = "Allow udp ports 2st set pavlov"
@@ -94,7 +96,7 @@ resource "aws_security_group" "fps_security_group" {
   }
 
   tags = {
-    Name = "Counter Strike Security Group"
+    Name = "fps Security Group"
   }
 }
 
