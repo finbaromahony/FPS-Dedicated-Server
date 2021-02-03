@@ -32,3 +32,13 @@
     group: ubuntu
     mode: u+rwx,g+rwx,o+rwx
   when: installation_type == "pavlov_shack"
+
+- name: add start script for pavlov_shack
+  copy:
+    src:  ./start_pavlov_shack.sh
+    dest: /home/ubuntu/start_pavlov_shack.sh
+    mode: 0644
+    owner: ubuntu
+    group: ubuntu
+    mode: u+rwx,g+rwx,o+rwx
+  when: installation_type == "pavlov_shack"
