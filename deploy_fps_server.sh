@@ -41,6 +41,7 @@ function set_required_defaults() {
     [ -n "${RCON_PASSWORD}" ] || { echo "Setting RCON_PASSWORD to Random value"; RCON_PASSWORD=$(random); }
     [ -n "${SV_PASSWORD}" ] || { echo "Setting SV_PASSWORD to \"\""; SV_PASSWORD='""'; }
     [ -n "${HOSTNAME}" ] || { echo "Setting HOSTNAME to FPS-Server"; HOSTNAME="FPS-Server"; }
+    [ -n "${API_KEY}" ] || { echo "Setting API_KEY to \"\""; API_KEY='""'; }
     if [[ ${CONDITION_ZERO} == 1 ]]
     then
         INSTALLATION_TYPE="condition_zero"
@@ -127,7 +128,7 @@ function run_ansible() {
     if [ -n "${PAVLOV_SHACK}" ]
     then
         echo "Run ansible to install Pavlov-Shack dedicated server on instance"
-        /usr/bin/ansible-playbook -i "${ANSIBLE_PATH}"/fps_inventory \
+        /usr/bin/ansible-playbook -vvvv -i "${ANSIBLE_PATH}"/fps_inventory \
                                      "${ANSIBLE_PATH}"/pavlov_shack.yml
     fi
 }

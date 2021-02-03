@@ -5,7 +5,7 @@ APPLY=apply
 VALIDATE=validate
 ECHO=echo
 INIT=init
-WORKSPACE=counter-strike-instance-workspace
+WORKSPACE=fps-instance-workspace
 
 # Default build target
 .DEFAULT_GOAL := validate

@@ -1,15 +1,31 @@
 # Run three times to get all the updates and validate the package
-- name: install pavlov shack
-  shell: steamcmd +login "anonymous" +force_install_dir "./pavlovserver" +app_update 622970 -beta shack +quit
-  become: no
-  ignore_errors: yes
+# - name: install pavlov shack
+#   shell: steamcmd +login "anonymous" +force_install_dir "./pavlovserver" +app_update 622970 -beta shack +quit
+#   become: no
+#   ignore_errors: yes
 
-- name: update pavlov shack
-  shell: steamcmd +login "anonymous" +force_install_dir "./pavlovserver" +app_update 622970 -beta shack +quit
-  become: no
-  ignore_errors: yes
+# - name: update pavlov shack
+#   shell: steamcmd +login "anonymous" +force_install_dir "./pavlovserver" +app_update 622970 -beta shack +quit
+#   become: no
+#   ignore_errors: yes
 
 # - name: validate pavlov shack
 #   shell: steamcmd +login "anonymous" +force_install_dir "./pavlovserver" +app_update 622970 -beta shack +quit
 #   become: no
 #   ignore_errors: yes
+
+- name: 'Pavlov shack - fire and forget task'
+  shell: steamcmd +login "anonymous" +force_install_dir "./pavlovserver" +app_update 622970 -beta shack +quit
+  become: no
+  async: 1000
+  poll: 0
+  register: pavlov_sleeper
+
+- name: 'Pavlov shack - check on fire and forget task'
+  become: no
+  async_status:
+    jid: "{{ pavlov_sleeper.ansible_job_id }}"
+  register: job_result
+  until: job_result.finished
+  retries: 30
+  delay: 10
