@@ -38,10 +38,20 @@ function random() {
 #   None
 #######################################
 function set_required_defaults() {
-    [ -n "${RCON_PASSWORD}" ] || { echo "Setting RCON_PASSWORD to Random value"; RCON_PASSWORD=$(random); }
-    [ -n "${SV_PASSWORD}" ] || { echo "Setting SV_PASSWORD to \"\""; SV_PASSWORD='""'; }
     [ -n "${HOSTNAME}" ] || { echo "Setting HOSTNAME to FPS-Server"; HOSTNAME="FPS-Server"; }
-    [ -n "${API_KEY}" ] || { echo "Setting API_KEY to \"\""; API_KEY='""'; }
+    if [[ "${FPS_FAMILY}" == "CS" ]]
+    then
+        echo "Set Counter Strike Defaults if Necessary"
+        [ -n "${RCON_PASSWORD}" ] || { echo "Setting RCON_PASSWORD to Random value"; RCON_PASSWORD=$(random); }
+        [ -n "${SV_PASSWORD}" ] || { echo "Setting SV_PASSWORD to \"\""; SV_PASSWORD='""'; }
+        [ -n "${API_KEY}" ] || { echo "Setting API_KEY to \"\""; API_KEY='""'; }
+    elif [[ "${FPS_FAMILY}" == "PAVLOV" ]]
+    then
+        echo "Set Pavlov VR Defaults if Necessary"
+        [ -n "${SV_PASSWORD}" ] || { echo "Setting SV_PASSWORD to 0000"; SV_PASSWORD=0000; }
+        check_sv_password_suitable_for_pavlov
+    fi
+
     if [[ ${CONDITION_ZERO} == 1 ]]
     then
         INSTALLATION_TYPE="condition_zero"
@@ -128,7 +138,7 @@ function run_ansible() {
     if [ -n "${PAVLOV_SHACK}" ]
     then
         echo "Run ansible to install Pavlov-Shack dedicated server on instance"
-        /usr/bin/ansible-playbook -vvvv -i "${ANSIBLE_PATH}"/fps_inventory \
+        /usr/bin/ansible-playbook -i "${ANSIBLE_PATH}"/fps_inventory \
                                      "${ANSIBLE_PATH}"/pavlov_shack.yml
     fi
 }
@@ -157,6 +167,22 @@ function check_required_variables_are_available () {
     fi
     
 }
+
+#######################################
+# Check pavlov password is suitable
+# They need to be 4 digit integers
+# Globals:
+#   SV_PASSWORD
+# Arguments:
+#   None
+# Returns:
+#   None
+#######################################
+function check_sv_password_suitable_for_pavlov () {
+    TEST_PASSWORD=$(echo $SV_PASSWORD | sed 's/^[0-9][0-9][0-9][0-9]$//g')
+    [ -n "${TEST_PASSWORD}" ] && { echo "${SV_PASSWORD} not suitable for pavlov, 4 digit integer required"; exit 1; }
+}
+
 
 #######################################
 # check if ssh running on deployed instance
@@ -191,6 +217,28 @@ function can_i_login() {
 }
 
 #######################################
+# Determine Family of FPS being deployed
+# Globals:
+#   COUNTER_STRIKE
+#   CONDITION_ZERO
+#   GLOBAL_OFFENSIVE
+#   PAVLOV_SHACK
+# Arguments:
+#   None
+# Returns:
+#   None
+#######################################
+function set_family() {
+    if [ -n "${COUNTER_STRIKE}" ] || [ -n "${CONDITION_ZERO}" ] || [ -n "${GLOBAL_OFFENSIVE}" ]
+    then
+        FPS_FAMILY="CS"
+    elif [ -n "${PAVLOV_SHACK}" ]
+    then
+        FPS_FAMILY="PAVLOV"
+    fi
+}
+
+#######################################
 # Print instructions to connect to counter strike server
 # Globals:
 #   SERVER_IP
@@ -201,13 +249,31 @@ function can_i_login() {
 # Returns:
 #   None
 #######################################
-function print_instructions() {
+function print_cs_instructions() {
     echo "Press ~ to open command console and type"
     echo "connect ${SERVER_IP}; password ${SV_PASSWORD}"
     echo "To change password on server"
     echo "    - Press ~ to open command console and type"
     echo "    - rcon_password ${RCON_PASSWORD}"
-    echo "    - rcon sv_password \"<password>\""
+    echo "    - rcon sv_password \"<new password>\""
+}
+
+#######################################
+# Print instructions to connect to pavlov server
+# Globals:
+#   HOSTNAME
+#   SV_PASSWORD
+# Arguments:
+#   None
+# Returns:
+#   None
+#######################################
+function print_pavlov_instructions() {
+    echo "Filter Serverlist to only show 'custom' servers"
+    echo "Find Server named ${HOSTNAME}"
+    echo "Password for Server is ${SV_PASSWORD}"
+    echo "Review http://wiki.pavlov-vr.com/index.php?title=Dedicated_server"
+    echo "or Discord for further details"
 }
 
 #######################################
@@ -230,7 +296,7 @@ function print_help() {
 -s Install Pavlov Shack Server
 [-a] Specify API_KEY value for CSGO
 [-r] Specify RCON_PASSWORD value
-[-p] Specify SV_PASSWORD value
+[-p] Specify SV_PASSWORD value, or 4 digit integer password for Pavlov VR
 [-n] Specify HOSTNAME value"
 exit 0
 }
@@ -265,7 +331,11 @@ if [ -n "${DEPLOY}" ]
 then
    make apply
 fi
-if [ -n "${COUNTER_STRIKE}" ] || [ -n "${CONDITION_ZERO}" ] || [ -n "${GLOBAL_OFFENSIVE}" ] || [ -n "${PAVLOV_SHACK}" ]
+
+# Determine Family of FPS being deployed
+set_family
+
+if [ -n "${FPS_FAMILY}" ]
 then
     get_server_ip_from_terraform_output
     check_required_variables_are_available
@@ -273,8 +343,15 @@ then
     set_required_defaults
     generate_inventory
     run_ansible
-    print_instructions
+    if [ "${FPS_FAMILY}" == "CS" ]
+    then
+        print_cs_instructions
+    elif [ "${FPS_FAMILY}" == "PAVLOV" ]
+    then
+        print_pavlov_instructions
+    fi
 fi
+
 if [ -n "${DESTROY}" ]
 then
     make destroy

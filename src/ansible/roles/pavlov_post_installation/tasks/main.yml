@@ -20,6 +20,6 @@
   template:
     src: Pavlov_Game.j2
     dest: /home/ubuntu/.steam/steamcmd/pavlovserver/Pavlov/Saved/Config/LinuxServer/Game.ini
-    mode: 0555
+    mode: a+rw
     force: yes
     backup: no
