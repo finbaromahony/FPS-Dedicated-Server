@@ -23,3 +23,12 @@
     mode: a+rw
     force: yes
     backup: no
+
+- name: add update_pavlov_shack.sh script
+  copy:
+    src: ./update_pavlov_shack.sh
+    dest: /home/ubuntu/update_pavlov_shack.sh
+    owner: ubuntu
+    group: ubuntu
+    mode: u+rwx,g+rwx,o+rwx
+  when: installation_type == "pavlov_shack"
