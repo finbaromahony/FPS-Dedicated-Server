@@ -1,10 +1,32 @@
-# Run three times to get all the updates and validate the package
-- name: install csgo
+# Run Twice to install and validate
+- name: 'CSGO Installation- fire and forget task'
   shell: steamcmd +login anonymous +force_install_dir "./cs/" +app_update 740 validate +quit
   become: no
-  ignore_errors: yes
+  async: 1000
+  poll: 0
+  register: csgo_installation_sleeper
 
-- name: validate csgo
+- name: 'CSGO - check on fire and forget installation task'
+  become: no
+  async_status:
+    jid: "{{ csgo_installation_sleeper.ansible_job_id }}"
+  register: install_result
+  until: install_result.finished
+  retries: 30
+  delay: 10
+
+- name: 'CSGO Validation- fire and forget task'
   shell: steamcmd +login anonymous +force_install_dir "./cs/" +app_update 740 validate +quit
   become: no
-  ignore_errors: yes
+  async: 1000
+  poll: 0
+  register: csgo_validation_sleeper
+
+- name: 'CSGO - check on fire and forget validation task'
+  become: no
+  async_status:
+    jid: "{{ csgo_validation_sleeper.ansible_job_id }}"
+  register: validate_result
+  until: validate_result.finished
+  retries: 30
+  delay: 10
