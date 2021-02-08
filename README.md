@@ -19,6 +19,7 @@ Deploy First Person Shooter Dedicated Server for use with a number of games
 - [Destroy Instance](#destroy)
 - [Manage Instance](#manage)
 - [Connect to instance](#connect)
+- [Troubleshooting](#troubleshooting)
 - [Known Issues](#known_issues)
 
 
@@ -127,6 +128,13 @@ Ansible is having issues installing CSGO...
 
 It exits when steam is attempting to get "user info"
 performing the operation manually does work.
+
+## Troubleshooting <a name="troubleshooting"></a>
+
+There are issues with the installation of components from time to time
+This can happen with steam itself or with the installation/upgrade of a dedicated server
+
+The `deploy_fps_server.sh` can be run as many times as required until the desired effect is obtained.
 
 ### Manual steps if CSGO installation fails
 
