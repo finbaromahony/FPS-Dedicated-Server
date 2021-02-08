@@ -87,6 +87,23 @@ resource "aws_security_group" "fps_security_group" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+
+  ingress {
+    description = "Allow tcp ports 1st set pavlov"
+    from_port   = 7777
+    to_port     = 7777
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "Allow tcp ports 2st set pavlov"
+    from_port   = 8177
+    to_port     = 8177
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   egress {
     description = "Allow all output"
     from_port   = 0
