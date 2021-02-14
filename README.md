@@ -15,6 +15,7 @@ Deploy First Person Shooter Dedicated Server for use with a number of games
   - [Counter Strike Condition Zero](#zero)
   - [Counter Strike Global Offensive](#CSGO)
   - [Pavlov Shack (Quest)](#pavshack)
+    - [Pavlov Shack (Quest) Custom Maps](#pavlovmaps)
   - [Set Password & Hostname](#password_hostname)
 - [Destroy Instance](#destroy)
 - [Manage Instance](#manage)
@@ -87,6 +88,24 @@ Run `deploy_fps_server.sh` specifying the install command
 Run `deploy_fps_server.sh` specifying the install command
 ```shell
 ./deploy_fps_server.sh -g -a <api_key>
+```
+
+### Installing Pavlov Shack VR (Quest) Dedicated Server <a name="pavlov"></a>
+
+run `deploy_fps_server.sh` specifying the install command
+```shell
+./deploy_fps_server.sh -s
+```
+
+#### Pavlov Shack VR (Quest) custom maps <a name="pavlovmaps"></a>
+
+Update text file in ansible/roles/pavlov_post_installation/files/maps.txt
+The file should contain a flat list of urls to maps
+
+```shell
+cat maps.txt
+http://download2265.mediafire.com/1l2pt6sqfftg/3ld3pzs0mwfhdrj/SVR_john_nuketown.zip
+http://download662.mediafire.com/yq2dzb9iu6jg/qur1yb4obfusfq2/SVR_john_mcdonalds.zip
 ```
 
 ### Specify server password and hostname [Optional] <a name="password_hostname"></a>

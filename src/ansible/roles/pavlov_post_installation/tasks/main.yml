@@ -1,24 +1,32 @@
-# Make Pavlov Script executable
+# # Make Pavlov Script executable
 - name: Make Pavlov Script executable
   file:
     path: /home/ubuntu/.steam/steamcmd/pavlovserver/PavlovServer.sh
     mode: a+x
+    owner: ubuntu
+    group: ubuntu
 
-# Create required folders
+# # Create required folders
 - name: Create Logs Directory
   file:
     path: /home/ubuntu/.steam/steamcmd/pavlovserver/Pavlov/Saved/Logs
     state: directory
+    owner: ubuntu
+    group: ubuntu
 
 - name: Create LinuxServer Directory
   file:
     path: /home/ubuntu/.steam/steamcmd/pavlovserver/Pavlov/Saved/Config/LinuxServer
     state: directory
+    owner: ubuntu
+    group: ubuntu
 
 - name: Create Maps Directory
   file:
     path: /home/ubuntu/.steam/steamcmd/pavlovserver/Pavlov/Saved/maps
     state: directory
+    owner: ubuntu
+    group: ubuntu
 
 - name: add update_pavlov_shack.sh script
   copy:
@@ -39,29 +47,6 @@
     mode: u+rwx,g+rwx,o+rwx
   when: installation_type == "pavlov_shack"
 
-
-# Add custom maps from a file
-# commandline to generate file?
-# if file exists iterate through the content of the file
-# download the files and put them in the correct place
-# update the game.ini to use all the custom maps
-
-# http://download2265.mediafire.com/1l2pt6sqfftg/3ld3pzs0mwfhdrj/SVR_john_nuketown.zip
-# http://download662.mediafire.com/yq2dzb9iu6jg/qur1yb4obfusfq2/SVR_john_mcdonalds.zip
-
-# - name: register maps
-#   shell: "echo {{items}}"
-#   loop: "{{ lookup('file', 'files/maps.txt').splitlines() }}"
-#   register: map_urls
-
-# - name: install maps from file
-#   get_url:
-#     url: "{{item}}"
-#     dest: /home/ubuntu/.steam/steamcmd/pavlovserver/Pavlov/Saved/maps
-#     mode: '0440'
-#     loop: "{{ lookup('file', 'files/maps.txt').splitlines() }}"
-
-
 # Configure Game.ini
 - name: configure Game.ini
   template:
@@ -70,3 +55,6 @@
     mode: a+rw
     force: yes
     backup: no
+    owner: ubuntu
+    group: ubuntu
+  become: no

@@ -29,3 +29,7 @@
 - name: update steamcmd
   become: no
   shell: steamcmd +quit
+
+- name: install unzip
+  apt:
+    name: unzip

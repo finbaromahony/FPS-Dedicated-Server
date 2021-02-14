@@ -11,5 +11,6 @@
     jid: "{{ pavlov_sleeper.ansible_job_id }}"
   register: job_result
   until: job_result.finished
+  ignore_errors: yes
   retries: 30
   delay: 15

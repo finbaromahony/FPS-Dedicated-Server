@@ -33,3 +33,4 @@ override.tf.json
 cstrike_inventory
 fps_inventory
 *.retry
+maps.txt
