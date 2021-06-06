@@ -14,6 +14,7 @@ Deploy First Person Shooter Dedicated Server for use with a number of games
   - [Counter Strike 1.6](#one_point_six)
   - [Counter Strike Condition Zero](#zero)
   - [Counter Strike Global Offensive](#CSGO)
+    - [CSGO api key](#CSGOapikey)
   - [Pavlov Shack (Quest)](#pavshack)
     - [Pavlov Shack (Quest) Custom Maps](#pavlovmaps)
   - [Set Password & Hostname](#password_hostname)
@@ -89,6 +90,13 @@ Run `deploy_fps_server.sh` specifying the install command
 ```shell
 ./deploy_fps_server.sh -g -a <api_key>
 ```
+
+#### CSGO api key <a name="CSGOapikey"></a>
+
+To Run CSGO you need to generate an api key to tie your server with your steam account.
+`https://steamcommunity.com/dev/managegameservers`
+use code 730 for CSGO
+
 
 ### Installing Pavlov Shack VR (Quest) Dedicated Server <a name="pavlov"></a>
 
