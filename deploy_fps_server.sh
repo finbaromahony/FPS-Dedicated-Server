@@ -121,24 +121,28 @@ function run_ansible() {
     then
         echo "Run ansible to install Counter Strike dedicated server on instance"
         /usr/bin/ansible-playbook -i "${ANSIBLE_PATH}"/fps_inventory \
+                                     "${VLOGGING}" \
                                      "${ANSIBLE_PATH}"/cstrike.yml
     fi
     if [ -n "${CONDITION_ZERO}" ]
     then
         echo "Run ansible to install Counter Strike Condition Zero dedicated server on instance"
         /usr/bin/ansible-playbook -i "${ANSIBLE_PATH}"/fps_inventory \
+                                     "${VLOGGING}" \
                                      "${ANSIBLE_PATH}"/cscz.yml
     fi
     if [ -n "${GLOBAL_OFFENSIVE}" ]
     then
         echo "Run ansible to install Counter Strike Global Offensive dedicated server on instance"
         /usr/bin/ansible-playbook -i "${ANSIBLE_PATH}"/fps_inventory \
+                                     "${VLOGGING}" \
                                      "${ANSIBLE_PATH}"/csgo.yml
     fi
     if [ -n "${PAVLOV_SHACK}" ]
     then
         echo "Run ansible to install Pavlov-Shack dedicated server on instance"
         /usr/bin/ansible-playbook -i "${ANSIBLE_PATH}"/fps_inventory \
+                                     "${VLOGGING}" \
                                      "${ANSIBLE_PATH}"/pavlov_shack.yml
     fi
 }
@@ -239,6 +243,36 @@ function set_family() {
 }
 
 #######################################
+# Determine the verbosity setting for ansible
+# Globals:
+#   VERBOSE
+#   VLOGGING
+# Arguments:
+#   None
+# Returns:
+#   None
+#######################################
+function calculate_verbose_logging() {
+    if [ -n "${VERBOSE}" ]
+    then
+        if [[ "${VERBOSE}" -eq 1 ]]
+        then
+            VLOGGING="-v"
+        elif [[ "${VERBOSE}" -eq 2 ]]
+        then
+            VLOGGING="-vv"
+        elif [[ "${VERBOSE}" -eq 3 ]]
+        then
+            VLOGGING="-vvv"
+        else
+            VLOGGING="-vvvv"
+        fi
+    else
+        VLOGGING=""
+    fi
+}
+
+#######################################
 # Print instructions to connect to counter strike server
 # Globals:
 #   SERVER_IP
@@ -297,7 +331,8 @@ function print_help() {
 [-a] Specify API_KEY value for CSGO
 [-r] Specify RCON_PASSWORD value
 [-p] Specify SV_PASSWORD value, or 4 digit integer password for Pavlov VR
-[-n] Specify HOSTNAME value"
+[-n] Specify HOSTNAME value
+[-v] Specify number to signify how verbose to be (up to 4)"
 exit 0
 }
 
@@ -308,7 +343,7 @@ ANSIBLE_PATH="${PWD}/src/ansible"
 # and it resides in ~/.ssh
 SSH_KEY_FILE="${HOME}/.ssh/fps_dedicated_rsa"
 
-while getopts :hdyczgsa:r:p:n: option
+while getopts :hdyczgsa:r:p:n:v: option
 do
     case "${option}"
     in
@@ -323,6 +358,7 @@ do
         r) RCON_PASSWORD=${OPTARG};;
         p) SV_PASSWORD=${OPTARG};;
         n) HOSTNAME=${OPTARG};;
+        v) VERBOSE=${OPTARG};;
         *) print_help;;
     esac
 done
@@ -342,6 +378,7 @@ then
     can_i_login
     set_required_defaults
     generate_inventory
+    calculate_verbose_logging
     run_ansible
     if [ "${FPS_FAMILY}" == "CS" ]
     then
