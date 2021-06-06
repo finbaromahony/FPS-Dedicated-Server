@@ -28,5 +28,5 @@
     jid: "{{ csgo_validation_sleeper.ansible_job_id }}"
   register: validate_result
   until: validate_result.finished
-  retries: 30
-  delay: 10
+  retries: 60
+  delay: 30
