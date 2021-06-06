@@ -34,17 +34,11 @@
   become: yes
   become-user: root
   register: swapon_output
-
-- name: print debug swapon
-  debug: 
-  msg: "{{ swapon_output.stdout }}"
+- debug: msg="{{swapon_output.stdout}}"
 
 - name: get free -h output for verification
   shell: free -h
   become: yes
   become-user: root
   register: free_output
-
-- name: print debug free
-  debug:
-  msg: "{{ free_output.stdout }}"
+- debug: msg="{{free_output.stdout}}"
