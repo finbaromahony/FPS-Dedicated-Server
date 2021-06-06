@@ -1,0 +1,23 @@
+[/Script/Pavlov.DedicatedServer]
+bEnabled=true
+ServerName="{{ server_hostname }}"
+MaxPlayers=10
+bSecured=true
+bCustomServer=true 
+bWhitelist=false 
+RefreshListTime=120 
+LimitedAmmoType=0 
+TickRate=90
+TimeLimit=15
+Password={{ sv_password }}
+# SND: Search and Destroy
+# TDM: Team Deathmatch
+# DM: Deathmatch
+# TTT: Trouble in Terrorist Town
+# GUN: Gun Game
+MapRotation=(MapId="bridge", GameMode="TDM")
+MapRotation=(MapId="Containeryard", GameMode="SND")
+MapRotation=(MapId="stalingrad", GameMode="GUN")
+MapRotation=(MapId="santorini", GameMode="DM")
+MapRotation=(MapId="sand", GameMode="GUN")
+MapRotation=(MapId="datacenter", GameMode="SND")

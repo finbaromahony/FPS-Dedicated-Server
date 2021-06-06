@@ -31,4 +31,6 @@ override.tf.json
 
 # Ansible
 cstrike_inventory
+fps_inventory
 *.retry
+maps.txt

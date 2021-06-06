@@ -1,0 +1,60 @@
+# # Make Pavlov Script executable
+- name: Make Pavlov Script executable
+  file:
+    path: /home/ubuntu/.steam/steamcmd/pavlovserver/PavlovServer.sh
+    mode: a+x
+    owner: ubuntu
+    group: ubuntu
+
+# # Create required folders
+- name: Create Logs Directory
+  file:
+    path: /home/ubuntu/.steam/steamcmd/pavlovserver/Pavlov/Saved/Logs
+    state: directory
+    owner: ubuntu
+    group: ubuntu
+
+- name: Create LinuxServer Directory
+  file:
+    path: /home/ubuntu/.steam/steamcmd/pavlovserver/Pavlov/Saved/Config/LinuxServer
+    state: directory
+    owner: ubuntu
+    group: ubuntu
+
+- name: Create Maps Directory
+  file:
+    path: /home/ubuntu/.steam/steamcmd/pavlovserver/Pavlov/Saved/maps
+    state: directory
+    owner: ubuntu
+    group: ubuntu
+
+- name: add update_pavlov_shack.sh script
+  copy:
+    src: ./update_pavlov_shack.sh
+    dest: /home/ubuntu/update_pavlov_shack.sh
+    owner: ubuntu
+    group: ubuntu
+    mode: u+rwx,g+rwx,o+rwx
+  when: installation_type == "pavlov_shack"
+
+- name: add start script for pavlov_shack
+  copy:
+    src:  ./start_pavlov_shack.sh
+    dest: /home/ubuntu/start_pavlov_shack.sh
+    mode: 0644
+    owner: ubuntu
+    group: ubuntu
+    mode: u+rwx,g+rwx,o+rwx
+  when: installation_type == "pavlov_shack"
+
+# Configure Game.ini
+- name: configure Game.ini
+  template:
+    src: Pavlov_Game.j2
+    dest: /home/ubuntu/.steam/steamcmd/pavlovserver/Pavlov/Saved/Config/LinuxServer/Game.ini
+    mode: a+rw
+    force: yes
+    backup: no
+    owner: ubuntu
+    group: ubuntu
+  become: no

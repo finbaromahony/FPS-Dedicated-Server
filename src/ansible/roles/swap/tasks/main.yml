@@ -1,0 +1,44 @@
+- name: create swap file
+  shell: fallocate -l 1G /swapfile
+  ignore_errors: yes
+  become: yes
+  become-user: root
+
+- name: set swap permissions
+  shell: chmod 600 /swapfile
+  become: yes
+  become-user: root
+
+- name: setup swap area on file
+  shell: mkswap /swapfile
+  ignore_errors: yes
+  become: yes
+  become-user: root
+
+- name: activate swap
+  shell: swapon /swapfile
+  ignore_errors: yes
+  become: yes
+  become-user: root
+
+- name: make swap permanent
+  blockinfile:
+    path: /etc/fstab
+    insertafter: EOF
+    block: |
+      /swapfile swap swap defaults 0 0
+    marker: '# {mark} ANSIBLE MANAGED BLOCK - swap'
+
+- name: get swapon output for verification
+  shell: swapon --show
+  become: yes
+  become-user: root
+  register: swapon_output
+- debug: msg="{{swapon_output.stdout}}"
+
+- name: get free -h output for verification
+  shell: free -h
+  become: yes
+  become-user: root
+  register: free_output
+- debug: msg="{{free_output.stdout}}"
