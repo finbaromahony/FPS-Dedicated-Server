@@ -12,8 +12,8 @@
     jid: "{{ csgo_installation_sleeper.ansible_job_id }}"
   register: install_result
   until: install_result.finished
-  retries: 30
-  delay: 10
+  retries: 60
+  delay: 30
 
 - name: 'CSGO Validation- fire and forget task'
   shell: steamcmd +login anonymous +force_install_dir "./cs/" +app_update 740 validate +quit

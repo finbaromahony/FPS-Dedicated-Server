@@ -10,5 +10,6 @@
     PATH: "{{ ansible_env.PATH }}:/usr/games"
   roles:
   - install_packages
+  - swap
   - pavlov_shack
   - pavlov_post_installation
