@@ -10,6 +10,7 @@
     PATH: "{{ ansible_env.PATH }}:/usr/games"
   roles:
   - install_packages
+  - swap
   - cs_iptables
   - csgo
   - general_cs_tasks
